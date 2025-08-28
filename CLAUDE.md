@@ -131,6 +131,20 @@ Each daily file is created from a template that includes sections for work compl
 
 ---
 
+## DigDragon Project Resources
+
+**📁 Reference Materials**: The `/docs/digdragon-contracts/` folder contains essential DigDragon project resources for understanding the existing ecosystem:
+
+- **`DigDragonMineV2-kub.sol`**: The current DigDragon mining contract deployed on Bitkub Chain. Contains staking logic, reward distribution, and hash power calculations.
+- **`KAP721.sol`**: The DigDragon NFT contract implementation following KAP-721 standard (Bitkub's NFT standard).
+- **`StakingContract.sol`**: A general staking contract template with reward mechanisms.
+- **`hashstorage.sol`**: Contract for storing and retrieving NFT hash power values.
+- **`digdragon.txt`**: Comprehensive documentation of the existing DigDragon frontend project structure, including blockchain integrations, API endpoints, and component architecture.
+
+**Usage**: Always refer to these contracts when developing AutoMine to ensure compatibility with the existing DigDragon ecosystem, especially for NFT interactions and mining mechanics.
+
+---
+
 ## Core Code Patterns
 
 ### Smart Contract (`AutoMine.sol`)
