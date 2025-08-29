@@ -127,7 +127,51 @@ The path for all files is `docs/retrospective/<YYYY-MM>/<YYYY-MM-DD>.md`.
 
 ### **Template**
 
-Each daily file is created from a template that includes sections for work completed, bugs/errors, lessons learned, and additional notes. Your message will be added to the relevant section in Thai language but let technical terms remain in English.
+Template: Each file follows a template with sections for tasks, bugs, lessons learned, and notes. I will add the message from =rrr to the appropriate section.
+
+** Update Current Date file if it exists (You might need to check what is the current date with my timezone before update) and create new file if not exists**
+
+# Retrospective วันที่ [วัน-เดือน-ปี]
+
+## 1. งานที่ทำไป
+
+- [Topic/Task 1]
+  - [รายละเอียดงานย่อย]
+  - [รายละเอียดงานย่อย]
+- [Topic/Task 2]
+  - [รายละเอียดงานย่อย]
+
+## 2. Bug/Error ที่เกิดขึ้นและการแก้ไข
+
+- [Bug/Error 1]
+  - สาเหตุ: [อธิบายสาเหตุ]
+  - วิธีแก้ไข: [อธิบายวิธีแก้ไข]
+- [Bug/Error 2]
+  - สาเหตุ: [อธิบายสาเหตุ]
+  - วิธีแก้ไข: [อธิบายวิธีแก้ไข]
+
+## 3. สิ่งที่ได้เรียนรู้ (Lesson Learned)
+
+- [Lesson 1]
+- [Lesson 2]
+- [Lesson 3]
+
+## 4. สิ่งสำคัญและข้อควรจำ
+
+- [ข้อควรระวัง 1]
+- [สิ่งที่ต้องจำ 2]
+- [ข้อสังเกตสำคัญ 3]
+
+## 5. หมายเหตุเพิ่มเติม (ถ้ามี)
+
+- [หมายเหตุ 1]
+- [หมายเหตุ 2]
+
+## 6. แผนของวันพรุ่งนี้ (ถ้ามี)
+
+- [แผนงาน 1]
+- [แผนงาน 2]
+- [แผนงาน 3]
 
 ---
 

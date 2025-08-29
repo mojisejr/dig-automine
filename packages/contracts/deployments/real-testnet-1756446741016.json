@@ -1,0 +1,23 @@
+{
+  "network": "bitkubTestnet",
+  "chainId": 25925,
+  "timestamp": "2025-08-29T05:52:21.015Z",
+  "deployer": "0x4C06524B1bd7AA002747252257bBE0C472735A6D",
+  "deploymentType": "REAL_TESTNET_PHASE_1B2",
+  "contracts": {
+    "automine": "0x9cf4C3F902dd56A94AeBd09526325F63f8BF7eDd",
+    "digDragonNFT": "0xFB5A318538aA21F06f0bc7792c34443B7B9D86B5",
+    "hashPowerStorage": "0xd76cD75FaA7beD947bcBfE388705c401B213F993",
+    "currentMine": "0x1B48a622d4f190b9060462020320d4cA8C588899",
+    "targetMine": "0x0a32B6924785D443D2D7f2B7Cf42b4C8694F1Ebf"
+  },
+  "configuration": {
+    "feePercentage": "5% (500 basis points)",
+    "maxFeePercentage": "20% (2000 basis points)",
+    "feeCollector": "0x4C06524B1bd7AA002747252257bBE0C472735A6D",
+    "botRole": "0x4C06524B1bd7AA002747252257bBE0C472735A6D"
+  },
+  "phase": "1B.2",
+  "description": "Testnet deployment with mock contracts for Phase 1B.2 validation",
+  "note": "Using mock contracts as real DigDragon contracts not available on testnet"
+}

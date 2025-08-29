@@ -155,6 +155,7 @@ AutoMine is a web-based platform for automated DigDragon NFT staking management.
 **Objective**: Transition from mock contract testing to real BitkubChain testnet deployment and comprehensive validation
 
 1. **Real Testnet Environment Setup**
+
    - Deploy AutoMine.sol to BitkubChain testnet with real contract verification
    - Connect to actual DigDragon contracts on testnet (not mocks)
    - Configure testnet wallet with sufficient KUB tokens for extended testing
@@ -162,6 +163,7 @@ AutoMine is a web-based platform for automated DigDragon NFT staking management.
    - Establish testnet-specific environment variables and configurations
 
 2. **Real Contract Integration Testing**
+
    - **2.1 Real DigDragon NFT Integration**:
      - Test with actual DigDragon NFTs on testnet
      - Verify hash power retrieval from real HashPowerStorage contract
@@ -179,6 +181,7 @@ AutoMine is a web-based platform for automated DigDragon NFT staking management.
      - Verify contract state consistency across operations
 
 3. **Performance & Reliability Testing**
+
    - **3.1 Network Performance Testing**:
      - Measure transaction confirmation times on real network
      - Test bot performance under network congestion
@@ -196,6 +199,7 @@ AutoMine is a web-based platform for automated DigDragon NFT staking management.
      - Bot restart and state recovery testing
 
 4. **Real-World Scenario Testing**
+
    - **4.1 Mine Switching Scenarios**:
      - Test during actual mine opening/closing events
      - Validate timing accuracy with real blockchain timestamps
@@ -213,6 +217,7 @@ AutoMine is a web-based platform for automated DigDragon NFT staking management.
      - Monitor actual gas costs vs. projected costs
 
 5. **Comprehensive Reporting & Analytics**
+
    - **5.1 Real Performance Metrics**:
      - Transaction success rates on real network (target: >98%)
      - Average gas consumption per operation

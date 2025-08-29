@@ -6,7 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "validate:phase1b1": "ts-node scripts/validate-phase1b1.ts",
-    "setup:testnet": "cd packages/contracts && npx hardhat run scripts/setup-testnet.ts --network bitkubTestnet"
+    "setup:testnet": "cd packages/contracts && npx hardhat run scripts/setup-testnet.ts --network bitkubTestnet",
+    "setup:phase1b2": "ts-node scripts/setup-phase1b2.ts",
+    "deploy:real-testnet": "cd packages/contracts && npx hardhat run scripts/deploy-real-testnet.ts --network bitkubTestnet",
+    "validate:real-testnet": "cd packages/contracts && npx hardhat run scripts/validate-real-testnet.ts --network bitkubTestnet",
+    "test:real-nft": "cd packages/contracts && npx hardhat run scripts/test-real-nft-integration.ts --network bitkubTestnet",
+    "test:performance": "ts-node scripts/performance-test.ts",
+    "test:24hour": "ts-node scripts/test-24hour.ts"
   },
   "keywords": [],
   "author": "",
