@@ -9,6 +9,7 @@ This document provides comprehensive API documentation for the AutoMine system, 
 ### AutoMine Contract Interface
 
 **Contract Address:**
+
 - Testnet: `[DEPLOYED]` (BitkubChain Testnet - Phase 1B.2 Active)
 - Mainnet: `[PENDING]` (BitkubChain Mainnet - Phase 1C)
 
@@ -17,6 +18,7 @@ This document provides comprehensive API documentation for the AutoMine system, 
 **ABI:** Available at `packages/contracts/artifacts/contracts/AutoMine.sol/AutoMine.json`
 
 **Testing Infrastructure:**
+
 - Real DigDragon contract integration: ✅ Validated
 - Performance testing: 🔄 Phase B (4-hour intensive)
 - Reliability testing: 📋 Phase C (24-hour continuous)
@@ -29,19 +31,23 @@ This document provides comprehensive API documentation for the AutoMine system, 
 Deposits DigDragon NFTs into the AutoMine contract for automated staking.
 
 **Parameters:**
+
 - `tokenIds`: Array of NFT token IDs to deposit
 
 **Requirements:**
+
 - Caller must own all specified NFTs
 - NFTs must be approved for transfer to AutoMine contract
 - Contract must not be paused
 
 **Events Emitted:**
+
 - `NFTDeposited(address indexed user, uint256[] tokenIds, uint256 timestamp)`
 
-**Gas Estimate:** ~150,000 + (50,000 * number of NFTs)
+**Gas Estimate:** ~150,000 + (50,000 \* number of NFTs)
 
 **Example Usage:**
+
 ```javascript
 // Using ethers.js
 const tokenIds = [1, 2, 3];
@@ -56,18 +62,22 @@ Claims accumulated mining rewards for the caller.
 **Parameters:** None
 
 **Returns:**
+
 - Transaction hash
 
 **Requirements:**
+
 - User must have pending rewards
 - Contract must not be paused
 
 **Events Emitted:**
+
 - `RewardClaimed(address indexed user, uint256 amount, uint256 fee, uint256 timestamp)`
 
 **Gas Estimate:** ~100,000
 
 **Example Usage:**
+
 ```javascript
 const tx = await autoMineContract.claimReward();
 const receipt = await tx.wait();
@@ -80,15 +90,18 @@ Withdraws all deposited NFTs back to the user.
 **Parameters:** None
 
 **Requirements:**
+
 - User must have deposited NFTs
 - Contract must not be paused
 
 **Events Emitted:**
+
 - `NFTWithdrawn(address indexed user, uint256[] tokenIds, uint256 timestamp)`
 
-**Gas Estimate:** ~100,000 + (30,000 * number of NFTs)
+**Gas Estimate:** ~100,000 + (30,000 \* number of NFTs)
 
 **Example Usage:**
+
 ```javascript
 const tx = await autoMineContract.withdrawAllNFT();
 const receipt = await tx.wait();
@@ -101,14 +114,17 @@ const receipt = await tx.wait();
 Switches all staked NFTs to a new mine contract.
 
 **Parameters:**
+
 - `newMineAddress`: Address of the new mine contract
 
 **Requirements:**
+
 - Caller must have BOT_ROLE
 - New mine address must be valid
 - Contract must not be paused
 
 **Events Emitted:**
+
 - `MineSwitch(address indexed oldMine, address indexed newMine, uint256 timestamp)`
 
 **Gas Estimate:** ~200,000 + (gas per NFT transfer)
@@ -120,12 +136,15 @@ Switches all staked NFTs to a new mine contract.
 Emergency function to unstake a specific user's NFTs.
 
 **Parameters:**
+
 - `user`: Address of the user to unstake
 
 **Requirements:**
+
 - Caller must have ADMIN_ROLE
 
 **Events Emitted:**
+
 - `EmergencyUnstake(address indexed user, uint256[] tokenIds, uint256 timestamp)`
 
 ##### `setMine(address mineAddress)`
@@ -133,13 +152,16 @@ Emergency function to unstake a specific user's NFTs.
 Sets the current active mine contract.
 
 **Parameters:**
+
 - `mineAddress`: Address of the mine contract
 
 **Requirements:**
+
 - Caller must have ADMIN_ROLE
 - Mine address must be valid
 
 **Events Emitted:**
+
 - `MineUpdated(address indexed oldMine, address indexed newMine, uint256 timestamp)`
 
 ##### `setFeePercentage(uint256 percentage)`
@@ -147,13 +169,16 @@ Sets the current active mine contract.
 Sets the fee percentage taken from user rewards.
 
 **Parameters:**
+
 - `percentage`: Fee percentage in basis points (100 = 1%)
 
 **Requirements:**
+
 - Caller must have ADMIN_ROLE
 - Percentage must be <= 1000 (10%)
 
 **Events Emitted:**
+
 - `FeePercentageUpdated(uint256 oldPercentage, uint256 newPercentage, uint256 timestamp)`
 
 #### View Functions
@@ -163,9 +188,11 @@ Sets the fee percentage taken from user rewards.
 Returns array of NFT token IDs deposited by a user.
 
 **Parameters:**
+
 - `user`: User address
 
 **Returns:**
+
 - Array of token IDs
 
 ##### `getCurrentMine() → address`
@@ -173,6 +200,7 @@ Returns array of NFT token IDs deposited by a user.
 Returns the address of the current active mine.
 
 **Returns:**
+
 - Current mine contract address
 
 ##### `getFeePercentage() → uint256`
@@ -180,6 +208,7 @@ Returns the address of the current active mine.
 Returns the current fee percentage.
 
 **Returns:**
+
 - Fee percentage in basis points
 
 ##### `getUserReward(address user) → uint256`
@@ -187,14 +216,17 @@ Returns the current fee percentage.
 Returns the pending reward amount for a user.
 
 **Parameters:**
+
 - `user`: User address
 
 **Returns:**
+
 - Pending reward amount in wei
 
 ## REST API
 
 ### Base URL
+
 - Development: `http://localhost:3000/api`
 - Staging: `https://automine-staging.render.com/api`
 - Production: `https://automine.yourdomain.com/api`
@@ -204,6 +236,7 @@ Returns the pending reward amount for a user.
 The API uses wallet signature-based authentication for user-specific endpoints.
 
 **Authentication Header:**
+
 ```
 Authorization: Bearer <wallet_signature>
 X-Wallet-Address: <user_wallet_address>
@@ -216,9 +249,11 @@ X-Wallet-Address: <user_wallet_address>
 Retrieve user information and statistics.
 
 **Parameters:**
+
 - `address`: User wallet address
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -244,6 +279,7 @@ Retrieve user information and statistics.
 Retrieve user's deposited NFTs.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -267,12 +303,14 @@ Retrieve user's deposited NFTs.
 Retrieve user's reward history.
 
 **Query Parameters:**
+
 - `page`: Page number (default: 1)
 - `limit`: Items per page (default: 20)
 - `from`: Start date (ISO string)
 - `to`: End date (ISO string)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -301,11 +339,13 @@ Retrieve user's reward history.
 Retrieve user's transaction history.
 
 **Query Parameters:**
+
 - `page`: Page number (default: 1)
 - `limit`: Items per page (default: 20)
 - `type`: Transaction type filter
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -340,6 +380,7 @@ Retrieve user's transaction history.
 Retrieve system-wide statistics.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -360,6 +401,7 @@ Retrieve system-wide statistics.
 Health check endpoint.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -380,6 +422,7 @@ Health check endpoint.
 Retrieve current mine status and information.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -408,11 +451,13 @@ Retrieve current mine status and information.
 Retrieve all users (admin only).
 
 **Query Parameters:**
+
 - `page`: Page number
 - `limit`: Items per page
 - `search`: Search by address
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -441,6 +486,7 @@ Retrieve all users (admin only).
 Emergency unstake for a specific user.
 
 **Request Body:**
+
 ```json
 {
   "userAddress": "0x...",
@@ -449,6 +495,7 @@ Emergency unstake for a specific user.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -465,6 +512,7 @@ Emergency unstake for a specific user.
 Pause the entire system.
 
 **Request Body:**
+
 ```json
 {
   "reason": "Maintenance"
@@ -472,6 +520,7 @@ Pause the entire system.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -490,6 +539,7 @@ Pause the entire system.
 
 **Authentication:**
 Send authentication message after connection:
+
 ```json
 {
   "type": "auth",
@@ -505,6 +555,7 @@ Send authentication message after connection:
 #### User Events
 
 ##### `nft_deposited`
+
 ```json
 {
   "type": "nft_deposited",
@@ -518,6 +569,7 @@ Send authentication message after connection:
 ```
 
 ##### `reward_claimed`
+
 ```json
 {
   "type": "reward_claimed",
@@ -532,6 +584,7 @@ Send authentication message after connection:
 ```
 
 ##### `nft_withdrawn`
+
 ```json
 {
   "type": "nft_withdrawn",
@@ -547,6 +600,7 @@ Send authentication message after connection:
 #### System Events
 
 ##### `mine_switch`
+
 ```json
 {
   "type": "mine_switch",
@@ -561,6 +615,7 @@ Send authentication message after connection:
 ```
 
 ##### `system_paused`
+
 ```json
 {
   "type": "system_paused",
@@ -583,6 +638,7 @@ Send authentication message after connection:
 **Trigger:** EventBridge (every 5 minutes)
 
 **Payload:**
+
 ```json
 {
   "action": "monitor",
@@ -594,6 +650,7 @@ Send authentication message after connection:
 ```
 
 **Response:**
+
 ```json
 {
   "statusCode": 200,
@@ -616,6 +673,7 @@ Send authentication message after connection:
 **Trigger:** Manual or scheduled
 
 **Payload:**
+
 ```json
 {
   "action": "switchMine",
@@ -627,6 +685,7 @@ Send authentication message after connection:
 ```
 
 **Response:**
+
 ```json
 {
   "statusCode": 200,
@@ -661,28 +720,28 @@ Send authentication message after connection:
 
 ### Common Error Codes
 
-| Code | Description | HTTP Status |
-|------|-------------|-------------|
-| `INVALID_ADDRESS` | Invalid wallet address | 400 |
-| `INSUFFICIENT_FUNDS` | Insufficient balance | 400 |
-| `CONTRACT_PAUSED` | Contract is paused | 503 |
-| `UNAUTHORIZED` | Invalid authentication | 401 |
-| `NOT_FOUND` | Resource not found | 404 |
-| `RATE_LIMITED` | Too many requests | 429 |
-| `INTERNAL_ERROR` | Server error | 500 |
-| `BLOCKCHAIN_ERROR` | Blockchain interaction failed | 502 |
-| `TIMEOUT` | Request timeout | 504 |
+| Code                 | Description                   | HTTP Status |
+| -------------------- | ----------------------------- | ----------- |
+| `INVALID_ADDRESS`    | Invalid wallet address        | 400         |
+| `INSUFFICIENT_FUNDS` | Insufficient balance          | 400         |
+| `CONTRACT_PAUSED`    | Contract is paused            | 503         |
+| `UNAUTHORIZED`       | Invalid authentication        | 401         |
+| `NOT_FOUND`          | Resource not found            | 404         |
+| `RATE_LIMITED`       | Too many requests             | 429         |
+| `INTERNAL_ERROR`     | Server error                  | 500         |
+| `BLOCKCHAIN_ERROR`   | Blockchain interaction failed | 502         |
+| `TIMEOUT`            | Request timeout               | 504         |
 
 ## Rate Limiting
 
 ### API Rate Limits
 
-| Endpoint Type | Limit | Window |
-|---------------|-------|--------|
-| Public endpoints | 100 requests | 1 minute |
-| User endpoints | 1000 requests | 1 hour |
-| Admin endpoints | 500 requests | 1 hour |
-| WebSocket connections | 10 connections | Per IP |
+| Endpoint Type         | Limit          | Window   |
+| --------------------- | -------------- | -------- |
+| Public endpoints      | 100 requests   | 1 minute |
+| User endpoints        | 1000 requests  | 1 hour   |
+| Admin endpoints       | 500 requests   | 1 hour   |
+| WebSocket connections | 10 connections | Per IP   |
 
 ### Rate Limit Headers
 
@@ -775,25 +834,28 @@ const tx = await contract.deposit([1, 2, 3]);
 const receipt = await tx.wait();
 
 // Test view functions
-const userNFTs = await contract.getUserNFTs('0x...');
+const userNFTs = await contract.getUserNFTs("0x...");
 const currentMine = await contract.getCurrentMine();
 ```
 
 ## Changelog
 
 ### v1.0.0 (2024-01-01)
+
 - Initial API release
 - Smart contract deployment
 - Basic user and admin endpoints
 - WebSocket event streaming
 
 ### v1.1.0 (2024-02-01)
+
 - Added batch operations
 - Improved error handling
 - Enhanced monitoring endpoints
 - SDK releases
 
 ### v1.2.0 (2024-03-01)
+
 - Performance optimizations
 - Additional admin controls
 - Enhanced security features
