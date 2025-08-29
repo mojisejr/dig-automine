@@ -1,6 +1,8 @@
 declare class Logger {
     private logLevel;
+    private logFile;
     constructor(logLevel?: 'debug' | 'info' | 'error');
+    private setupFileLogging;
     private shouldLog;
     private createLogEntry;
     private output;

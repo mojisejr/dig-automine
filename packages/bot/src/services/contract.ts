@@ -9,15 +9,19 @@ export class ContractService {
   
   private autoMineAbi = parseAbi([
     'function switchMine(address _targetMine) external',
-    'function getUserTokenIds(address _user) external view returns (uint256[])',
-    'function getUserReward(address _user) external view returns (uint256)',
-    'function getCurrentMine() external view returns (address)',
-    'function getDepositedTokens() external view returns (address[], uint256[][])',
+    'function getUserInfo(address _user) external view returns (uint256[] memory tokenIds, uint256 totalHashPower, uint256 lastRewardClaim, bool isActive)',
+    'function getContractStats() external view returns (uint256 totalTokens, uint256 activeUsers, address current, address target)',
+    'function getDepositedTokens() external view returns (address[] memory users, uint256[][] memory tokenIds)',
     'function hasRole(bytes32 role, address account) external view returns (bool)',
     'function BOT_ROLE() external view returns (bytes32)',
-    'event MineSwitched(address indexed oldMine, address indexed newMine, uint256 timestamp)',
-    'event NFTDeposited(address indexed user, uint256[] tokenIds)',
-    'event RewardClaimed(address indexed user, uint256 amount, uint256 fee)'
+    'function currentMine() external view returns (address)',
+    'function targetMine() external view returns (address)',
+    'function feePercentage() external view returns (uint256)',
+    'event NFTDeposited(address indexed user, uint256[] tokenIds, uint256 totalHashPower)',
+    'event NFTWithdrawn(address indexed user, uint256[] tokenIds)',
+    'event RewardClaimed(address indexed user, uint256 grossReward, uint256 fee, uint256 netReward)',
+    'event MineSwitch(address indexed from, address indexed to, uint256 totalTokens)',
+    'event EmergencyUnstake(address indexed admin, address indexed user, uint256[] tokenIds)'
   ]);
 
   constructor(web3Service: Web3Service, config: BotConfig) {
@@ -53,13 +57,55 @@ export class ContractService {
       const currentMine = await this.web3Service.getPublicClient().readContract({
         address: this.config.autoMineContractAddress as Address,
         abi: this.autoMineAbi,
-        functionName: 'getCurrentMine'
+        functionName: 'currentMine'
       });
 
       logger.debug(`Current mine address: ${currentMine}`, 'CONTRACT_READ');
       return currentMine as Address;
     } catch (error) {
       logger.error('Failed to get current mine address', error, 'CONTRACT_READ');
+      throw error;
+    }
+  }
+
+  async getContractStats(): Promise<{ totalTokens: number, activeUsers: number, current: Address, target: Address }> {
+    try {
+      const [totalTokens, activeUsers, current, target] = await this.web3Service.getPublicClient().readContract({
+        address: this.config.autoMineContractAddress as Address,
+        abi: this.autoMineAbi,
+        functionName: 'getContractStats'
+      });
+
+      logger.debug(`Contract stats - Tokens: ${totalTokens}, Users: ${activeUsers}`, 'CONTRACT_READ');
+      return { 
+        totalTokens: Number(totalTokens), 
+        activeUsers: Number(activeUsers), 
+        current: current as Address, 
+        target: target as Address 
+      };
+    } catch (error) {
+      logger.error('Failed to get contract stats', error, 'CONTRACT_READ');
+      throw error;
+    }
+  }
+
+  async getUserInfo(userAddress: Address): Promise<{ tokenIds: number[], totalHashPower: number, lastRewardClaim: number, isActive: boolean }> {
+    try {
+      const [tokenIds, totalHashPower, lastRewardClaim, isActive] = await this.web3Service.getPublicClient().readContract({
+        address: this.config.autoMineContractAddress as Address,
+        abi: this.autoMineAbi,
+        functionName: 'getUserInfo',
+        args: [userAddress]
+      });
+
+      return { 
+        tokenIds: (tokenIds as BigInt[]).map(id => Number(id)), 
+        totalHashPower: Number(totalHashPower), 
+        lastRewardClaim: Number(lastRewardClaim), 
+        isActive: isActive as boolean 
+      };
+    } catch (error) {
+      logger.error(`Failed to get user info for ${userAddress}`, error, 'CONTRACT_READ');
       throw error;
     }
   }
@@ -72,26 +118,17 @@ export class ContractService {
         functionName: 'getDepositedTokens'
       });
 
-      logger.debug(`Found ${users.length} users with deposited tokens`, 'CONTRACT_READ');
-      return { users: users as Address[], tokenIds: tokenIds as number[][] };
+      const formattedTokenIds = (tokenIds as BigInt[][]).map(userTokens => 
+        userTokens.map(id => Number(id))
+      );
+
+      logger.debug(`Retrieved ${users.length} users with deposited tokens`, 'CONTRACT_READ');
+      return { 
+        users: users as Address[], 
+        tokenIds: formattedTokenIds 
+      };
     } catch (error) {
       logger.error('Failed to get deposited tokens', error, 'CONTRACT_READ');
-      throw error;
-    }
-  }
-
-  async getUserTokenIds(userAddress: Address): Promise<number[]> {
-    try {
-      const tokenIds = await this.web3Service.getPublicClient().readContract({
-        address: this.config.autoMineContractAddress as Address,
-        abi: this.autoMineAbi,
-        functionName: 'getUserTokenIds',
-        args: [userAddress]
-      });
-
-      return tokenIds as number[];
-    } catch (error) {
-      logger.error(`Failed to get token IDs for user ${userAddress}`, error, 'CONTRACT_READ');
       throw error;
     }
   }

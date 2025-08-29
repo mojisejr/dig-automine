@@ -65,12 +65,13 @@ export class Web3Service {
     }
   }
 
-  async getBalance(): Promise<bigint> {
+  async getBalance(address?: Address): Promise<bigint> {
     try {
+      const targetAddress = address || this.account.address;
       const balance = await this.publicClient.getBalance({
-        address: this.account.address
+        address: targetAddress
       });
-      logger.debug(`Bot wallet balance: ${balance} KUB`, 'WALLET_INFO');
+      logger.debug(`Wallet balance for ${targetAddress}: ${balance} KUB`, 'WALLET_INFO');
       return balance;
     } catch (error) {
       logger.error('Failed to get wallet balance', error, 'WALLET_INFO');
