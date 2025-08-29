@@ -229,4 +229,96 @@
     transform: translateY(-2px);
     box-shadow: 0 10px 25px -5px oklch(26% 0.065 152.934 / 0.15);
   }
+  
+  /* Semantic Event Colors - Theme Aware */
+  .event-success {
+    @apply bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800/30;
+  }
+  
+  .event-success-text {
+    @apply text-green-700 dark:text-green-300;
+  }
+  
+  .event-success-icon {
+    @apply text-green-600 dark:text-green-400;
+  }
+  
+  .event-info {
+    @apply bg-blue-50 border-blue-200 dark:bg-blue-950/20 dark:border-blue-800/30;
+  }
+  
+  .event-info-text {
+    @apply text-blue-700 dark:text-blue-300;
+  }
+  
+  .event-info-icon {
+    @apply text-blue-600 dark:text-blue-400;
+  }
+  
+  .event-warning {
+    @apply bg-orange-50 border-orange-200 dark:bg-orange-950/20 dark:border-orange-800/30;
+  }
+  
+  .event-warning-text {
+    @apply text-orange-700 dark:text-orange-300;
+  }
+  
+  .event-warning-icon {
+    @apply text-orange-600 dark:text-orange-400;
+  }
+  
+  .event-error {
+    @apply bg-red-50 border-red-200 dark:bg-red-950/20 dark:border-red-800/30;
+  }
+  
+  .event-error-text {
+    @apply text-red-700 dark:text-red-300;
+  }
+  
+  .event-error-icon {
+    @apply text-red-600 dark:text-red-400;
+  }
+  
+  /* Status Indicators */
+  .status-active {
+    @apply bg-green-500 dark:bg-green-400;
+  }
+  
+  .status-inactive {
+    @apply bg-gray-500 dark:bg-gray-400;
+  }
+  
+  .status-pending {
+    @apply bg-yellow-500 dark:bg-yellow-400;
+  }
+  
+  /* Loading Spinners */
+  .spinner-primary {
+    @apply border-primary border-t-transparent;
+  }
+  
+  .spinner-warning {
+    @apply border-orange-500 border-t-transparent dark:border-orange-400;
+  }
+  
+  .spinner-info {
+    @apply border-blue-500 border-t-transparent dark:border-blue-400;
+  }
+  
+  /* Event Buttons */
+  .event-error-button {
+    @apply bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-800;
+  }
+  
+  .event-success-button {
+    @apply bg-green-600 hover:bg-green-700 text-white dark:bg-green-700 dark:hover:bg-green-800;
+  }
+  
+  .event-warning-button {
+    @apply bg-orange-600 hover:bg-orange-700 text-white dark:bg-orange-700 dark:hover:bg-orange-800;
+  }
+  
+  .event-info-button {
+    @apply bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-800;
+  }
 }

@@ -23,6 +23,7 @@ import {
   Target,
   Users,
   AlertCircle,
+  Check,
 } from "lucide-react";
 import { useAccount, useBalance, useSwitchChain, useChainId } from "wagmi";
 import { formatEther } from "viem";
@@ -125,39 +126,39 @@ export default function Dashboard() {
         </div>
         {/* Transaction Status */}
         {(isPending || isConfirming || isConfirmed || error) && (
-          <Card className="mb-6 border-blue-200 bg-blue-50">
+          <Card className="mb-6 event-info">
             <CardContent className="p-4">
               <div className="flex items-start gap-2 min-h-0">
                 {isPending && (
                   <>
-                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                    <span className="text-blue-800">
+                    <div className="w-4 h-4 border-2 spinner-info rounded-full animate-spin" />
+                    <span className="event-info-text">
                       Transaction pending...
                     </span>
                   </>
                 )}
                 {isConfirming && (
-                  <>
-                    <div className="w-4 h-4 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
-                    <span className="text-yellow-800">
-                      Confirming transaction...
+                    <>
+                      <div className="w-4 h-4 border-2 spinner-warning rounded-full animate-spin" />
+                      <span className="event-warning-text">
+                        Confirming transaction...
                     </span>
                   </>
                 )}
                 {isConfirmed && (
-                  <>
-                    <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                      <div className="w-2 h-2 bg-white rounded-full" />
-                    </div>
-                    <span className="text-green-800">
-                      Transaction confirmed!
+                    <>
+                      <div className="w-4 h-4 status-active rounded-full flex items-center justify-center">
+                        <Check className="h-3 w-3 text-white" />
+                      </div>
+                      <span className="event-success-text">
+                        Transaction confirmed!
                     </span>
                   </>
                 )}
                 {error && (
                   <>
-                    <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
-                    <div className="text-red-800 break-words overflow-hidden">
+                    <AlertCircle className="h-4 w-4 event-error-icon flex-shrink-0" />
+                    <div className="event-error-text break-words overflow-hidden">
                       <span className="font-medium">Error:</span>
                       <div className="text-sm mt-1 break-all">
                         {error.message}
@@ -172,16 +173,16 @@ export default function Dashboard() {
 
         {/* Wrong Network Warning */}
         {isWrongNetwork && (
-          <Card className="border-red-200 bg-red-50 mb-6">
+          <Card className="event-error mb-6">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <AlertCircle className="h-6 w-6 text-red-600" />
+                  <AlertCircle className="h-6 w-6 event-error-icon" />
                   <div>
-                    <h3 className="font-semibold text-red-800">
+                    <h3 className="font-semibold event-error-text">
                       Wrong Network Detected
                     </h3>
-                    <p className="text-sm text-red-700">
+                    <p className="text-sm event-error-text">
                       You're connected to {chain?.name || "Unknown Network"}{" "}
                       (Chain ID: {chainId}). Please switch to Bitkub Testnet
                       (Chain ID: 25925) to use this application.
@@ -190,7 +191,7 @@ export default function Dashboard() {
                 </div>
                 <Button
                   onClick={handleSwitchNetwork}
-                  className="bg-red-600 hover:bg-red-700 text-white"
+                  className="event-error-button"
                   size="sm"
                 >
                   Switch to Testnet
@@ -202,14 +203,14 @@ export default function Dashboard() {
 
         {/* Stats Overview */}
         {!isConnected ? (
-          <Card className="border-amber-200 bg-amber-50 mb-8">
+          <Card className="event-warning mb-8">
             <CardContent className="flex items-center gap-4 pt-6">
-              <AlertCircle className="h-8 w-8 text-amber-600" />
+              <AlertCircle className="h-8 w-8 event-warning-icon" />
               <div>
-                <h3 className="font-semibold text-amber-800">
+                <h3 className="font-semibold event-warning-text">
                   Wallet Not Connected
                 </h3>
-                <p className="text-sm text-amber-700">
+                <p className="text-sm event-warning-text">
                   Please connect your wallet to access the dashboard features.
                 </p>
               </div>
@@ -281,10 +282,11 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {mounted ? (
-                    chainId === bitkubTestnet.id ? "Bitkub Testnet" : 
-                    chain?.name || "Unknown Network"
-                  ) : "Loading..."}
+                  {mounted
+                    ? chainId === bitkubTestnet.id
+                      ? "Bitkub Testnet"
+                      : chain?.name || "Unknown Network"
+                    : "Loading..."}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Chain ID: {mounted ? chainId || "N/A" : "..."}
@@ -317,62 +319,71 @@ export default function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {/* Mining Operation 1 */}
-                    <div className="flex items-center justify-between p-4 rounded-lg bg-card/50 border border-border/30">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                        <div>
-                          <p className="font-medium">NFT Miner #001</p>
-                          <p className="text-sm text-muted-foreground">
-                            Dragon Collection
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">12.34 KUB/day</p>
-                        <p className="text-sm text-muted-foreground">
-                          Running 2h 34m
+                    {dashboardLoading ? (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">
+                          Loading mining operations...
                         </p>
                       </div>
-                    </div>
-
-                    {/* Mining Operation 2 */}
-                    <div className="flex items-center justify-between p-4 rounded-lg bg-card/50 border border-border/30">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                        <div>
-                          <p className="font-medium">NFT Miner #002</p>
-                          <p className="text-sm text-muted-foreground">
-                            Phoenix Collection
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">8.76 KUB/day</p>
-                        <p className="text-sm text-muted-foreground">
-                          Running 5h 12m
+                    ) : !isConnected ? (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">
+                          Connect wallet to view mining operations
                         </p>
                       </div>
-                    </div>
-
-                    {/* Mining Operation 3 */}
-                    <div className="flex items-center justify-between p-4 rounded-lg bg-card/50 border border-border/30">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
-                        <div>
-                          <p className="font-medium">NFT Miner #003</p>
-                          <p className="text-sm text-muted-foreground">
-                            Crystal Collection
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">15.23 KUB/day</p>
+                    ) : userInfo?.tokenIds && userInfo.tokenIds.length > 0 ? (
+                      userInfo.tokenIds.map((tokenId, index) => {
+                        const colors = [
+                          "from-purple-500 to-pink-500",
+                          "from-blue-500 to-cyan-500", 
+                          "from-green-500 to-emerald-500",
+                          "from-orange-500 to-red-500",
+                          "from-indigo-500 to-purple-500",
+                        ];
+                        const colorClass = colors[index % colors.length];
+                        
+                        return (
+                          <div
+                            key={tokenId.toString()}
+                            className="flex items-center justify-between p-4 rounded-lg bg-card/50 border border-border/30"
+                          >
+                            <div className="flex items-center space-x-4">
+                              <div className={`w-3 h-3 ${userInfo.isActive ? 'status-active' : 'status-inactive'} rounded-full ${userInfo.isActive ? 'animate-pulse' : ''}`}></div>
+                              <div className="flex items-center gap-3">
+                                <div
+                                  className={`w-10 h-10 bg-gradient-to-br ${colorClass} rounded-lg flex items-center justify-center text-white font-bold text-xs`}
+                                >
+                                  #{tokenId.toString().padStart(3, "0")}
+                                </div>
+                                <div>
+                                  <p className="font-medium">NFT Miner #{tokenId.toString()}</p>
+                                  <p className="text-sm text-muted-foreground">
+                                    DigDragon Collection
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium">
+                                {userInfo.isActive ? "Active Mining" : "Idle"}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {userInfo.isActive ? "Earning rewards" : "Not earning"}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground mb-4">
+                          No NFTs staked for mining
+                        </p>
                         <p className="text-sm text-muted-foreground">
-                          Optimizing...
+                          Stake your DigDragon NFTs to start mining
                         </p>
                       </div>
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -389,14 +400,106 @@ export default function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="h-64 flex items-center justify-center text-muted-foreground">
-                      <div className="text-center">
-                        <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p>
-                          Analytics charts will be implemented in Phase 1C.2
-                        </p>
+                    {dashboardLoading ? (
+                      <div className="h-64 flex items-center justify-center text-muted-foreground">
+                        <div className="text-center">
+                          <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                          <p>Loading analytics...</p>
+                        </div>
                       </div>
-                    </div>
+                    ) : !isConnected ? (
+                      <div className="h-64 flex items-center justify-center text-muted-foreground">
+                        <div className="text-center">
+                          <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                          <p>Connect wallet to view analytics</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        {/* Analytics Overview */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="p-4 border rounded-lg bg-card/30">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="text-sm font-medium text-muted-foreground">Total Hash Power</p>
+                                <p className="text-2xl font-bold">{userInfo?.totalHashPower?.toString() || "0"}</p>
+                              </div>
+                              <Zap className="h-8 w-8 event-info-icon" />
+                            </div>
+                          </div>
+                          
+                          <div className="p-4 border rounded-lg bg-card/30">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="text-sm font-medium text-muted-foreground">Staked NFTs</p>
+                                <p className="text-2xl font-bold">{userInfo?.tokenIds?.length || 0}</p>
+                              </div>
+                              <Target className="h-8 w-8 event-success-icon" />
+                            </div>
+                          </div>
+                          
+                          <div className="p-4 border rounded-lg bg-card/30">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="text-sm font-medium text-muted-foreground">Mining Status</p>
+                                <p className="text-2xl font-bold">{userInfo?.isActive ? "Active" : "Idle"}</p>
+                              </div>
+                              <Activity className={`h-8 w-8 ${userInfo?.isActive ? 'event-success-icon' : 'text-gray-500 dark:text-gray-400'}`} />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Performance Summary */}
+                        <div className="border rounded-lg p-4 bg-card/30">
+                          <h3 className="font-semibold mb-4 flex items-center">
+                            <TrendingUp className="h-5 w-5 mr-2" />
+                            Performance Summary
+                          </h3>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-muted-foreground">Total Earnings</span>
+                              <span className="font-medium">{formatEther(totalEarnings)} KUB</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-muted-foreground">Last Reward Claim</span>
+                              <span className="font-medium">
+                                {userInfo?.lastRewardClaim && userInfo.lastRewardClaim > 0 
+                                  ? new Date(Number(userInfo.lastRewardClaim) * 1000).toLocaleDateString()
+                                  : "Never"
+                                }
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-muted-foreground">Mining Efficiency</span>
+                              <span className="font-medium">
+                                {userInfo?.isActive && userInfo?.tokenIds?.length > 0 
+                                  ? "Optimized" 
+                                  : "Not Mining"
+                                }
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Contract Analytics */}
+                        <div className="border rounded-lg p-4 bg-card/30">
+                          <h3 className="font-semibold mb-4 flex items-center">
+                            <Users className="h-5 w-5 mr-2" />
+                            Network Statistics
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <p className="text-sm text-muted-foreground">Total Network Tokens</p>
+                              <p className="text-xl font-bold">{contractStats?.totalTokens?.toString() || "0"}</p>
+                            </div>
+                            <div className="space-y-2">
+                              <p className="text-sm text-muted-foreground">Active Users</p>
+                              <p className="text-xl font-bold">{contractStats?.activeUsers?.toString() || "0"}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -413,51 +516,106 @@ export default function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between p-3 rounded-lg bg-card/30">
-                        <div>
-                          <p className="font-medium">
-                            Mining Session Completed
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            2 hours ago
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium text-green-500">
-                            +24.56 KUB
-                          </p>
-                        </div>
+                    {!isConnected ? (
+                      <div className="text-center py-8">
+                        <Clock className="h-12 w-12 mx-auto mb-4 opacity-50 text-muted-foreground" />
+                        <p className="text-muted-foreground">
+                          Connect wallet to view transaction history
+                        </p>
                       </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {/* Reward Events */}
+                        {userEvents.rewardEvents.slice(0, 10).map((event, index) => (
+                          <div
+                            key={`reward-${index}`}
+                            className="flex items-center justify-between p-3 rounded-lg event-success"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Coins className="h-5 w-5 event-success-icon" />
+                              <div>
+                                <p className="font-medium">Reward Claimed</p>
+                                <p className="text-sm text-muted-foreground">
+                                  Just now
+                                </p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium event-success-text">
+                                +{formatEther(event.amount)} KUB
+                              </p>
+                            </div>
+                          </div>
+                        ))}
 
-                      <div className="flex items-center justify-between p-3 rounded-lg bg-card/30">
-                        <div>
-                          <p className="font-medium">Reward Claimed</p>
-                          <p className="text-sm text-muted-foreground">
-                            6 hours ago
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium text-green-500">
-                            +18.34 KUB
-                          </p>
-                        </div>
-                      </div>
+                        {/* Deposit Events */}
+                        {userEvents.depositEvents.slice(0, 10).map((event, index) => (
+                          <div
+                            key={`deposit-${index}`}
+                            className="flex items-center justify-between p-3 rounded-lg event-info"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Zap className="h-5 w-5 event-info-icon" />
+                              <div>
+                                <p className="font-medium">
+                                  {event.tokenIds.length} NFT{event.tokenIds.length > 1 ? "s" : ""} Staked
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  Just now
+                                </p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium event-info-text">
+                                {event.tokenIds.slice(0, 3).map(id => `#${id.toString()}`).join(", ")}
+                                {event.tokenIds.length > 3 && ` +${event.tokenIds.length - 3} more`}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
 
-                      <div className="flex items-center justify-between p-3 rounded-lg bg-card/30">
-                        <div>
-                          <p className="font-medium">NFT Staked</p>
-                          <p className="text-sm text-muted-foreground">
-                            1 day ago
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium text-blue-500">
-                            Dragon #1234
-                          </p>
-                        </div>
+                        {/* Withdraw Events */}
+                        {userEvents.withdrawEvents.slice(0, 10).map((event, index) => (
+                          <div
+                            key={`withdraw-${index}`}
+                            className="flex items-center justify-between p-3 rounded-lg event-warning"
+                          >
+                            <div className="flex items-center gap-3">
+                              <TrendingUp className="h-5 w-5 event-warning-icon" />
+                              <div>
+                                <p className="font-medium">
+                                  {event.tokenIds.length} NFT{event.tokenIds.length > 1 ? "s" : ""} Unstaked
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  Just now
+                                </p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium event-warning-text">
+                                {event.tokenIds.slice(0, 3).map(id => `#${id.toString()}`).join(", ")}
+                                {event.tokenIds.length > 3 && ` +${event.tokenIds.length - 3} more`}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* Empty State */}
+                        {userEvents.depositEvents.length === 0 && 
+                         userEvents.withdrawEvents.length === 0 && 
+                         userEvents.rewardEvents.length === 0 && (
+                          <div className="text-center py-8">
+                            <Clock className="h-12 w-12 mx-auto mb-4 opacity-50 text-muted-foreground" />
+                            <p className="text-muted-foreground mb-2">
+                              No transaction history yet
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Start mining to see your activity here
+                            </p>
+                          </div>
+                        )}
                       </div>
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -580,7 +738,7 @@ export default function Dashboard() {
                                 : "Approve NFTs"}
                             </Button>
                             {isConfirmed && (
-                              <p className="text-xs text-green-600">
+                              <p className="text-xs event-success-text">
                                 ✓ NFT approval successful! You can now deposit
                                 your NFTs.
                               </p>
@@ -612,8 +770,8 @@ export default function Dashboard() {
               <CardContent className="space-y-4">
                 {!isConnected ? (
                   <div className="text-center p-4 rounded-lg bg-card/50 border border-border/30">
-                    <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <Wallet className="h-6 w-6 text-red-600" />
+                    <div className="w-12 h-12 bg-red-100 dark:bg-red-950/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Wallet className="h-6 w-6 event-error-icon" />
                     </div>
                     <p className="font-medium mb-2">Wallet Not Connected</p>
                     <p className="text-sm text-muted-foreground mb-4">
@@ -624,16 +782,13 @@ export default function Dashboard() {
                     </Button>
                   </div>
                 ) : (
-                  <div className="text-center p-4 rounded-lg bg-green-50 border border-green-200">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <Wallet className="h-6 w-6 text-green-600" />
+                  <div className="text-center p-4 rounded-lg event-success">
+                <div className="w-12 h-12 bg-green-100 dark:bg-green-950/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Wallet className="h-6 w-6 event-success-icon" />
                     </div>
                     <p className="font-medium mb-2">Wallet Connected</p>
                     <p className="text-sm text-muted-foreground mb-2">
                       {address?.slice(0, 6)}...{address?.slice(-4)}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Network: {chain?.name || "Unknown"}
                     </p>
                   </div>
                 )}
@@ -673,7 +828,7 @@ export default function Dashboard() {
                             : "Approve NFTs"}
                         </Button>
                         {isConfirmed && (
-                          <p className="text-xs text-green-600 text-center">
+                          <p className="text-xs event-success-text text-center">
                             ✓ NFT approval successful! You can now deposit your
                             NFTs.
                           </p>
@@ -684,14 +839,16 @@ export default function Dashboard() {
                     <Button
                       className="w-full silk-gradient text-white border-0"
                       onClick={() => {
-                        // For now, stake all available NFTs
-                        // In a real implementation, you'd have a modal to select specific NFTs
+                        // TODO: Implement proper NFT token ID discovery
+                        // Currently we generate sequential IDs as DigDragon NFTs
+                        // typically use sequential numbering starting from 1
+                        // In production, this should be replaced with actual owned token IDs
                         if (nftBalance && nftBalance > 0) {
-                          const mockTokenIds = Array.from(
+                          const tokenIds = Array.from(
                             { length: Number(nftBalance) },
                             (_, i) => BigInt(i + 1)
                           );
-                          deposit(mockTokenIds);
+                          deposit(tokenIds);
                         }
                       }}
                       disabled={
@@ -764,9 +921,9 @@ export default function Dashboard() {
                       .map((event, index) => (
                         <div
                           key={`deposit-${index}`}
-                          className="flex items-center gap-3 p-2 rounded-lg bg-green-50 border border-green-200"
-                        >
-                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                          className="flex items-center gap-3 p-2 rounded-lg bg-card border event-success"
+                >
+                  <div className="w-2 h-2 status-active rounded-full animate-pulse"></div>
                           <div className="flex-1">
                             <p className="text-sm font-medium">NFT Deposited</p>
                             <p className="text-xs text-muted-foreground">
@@ -785,9 +942,9 @@ export default function Dashboard() {
                       .map((event, index) => (
                         <div
                           key={`withdraw-${index}`}
-                          className="flex items-center gap-3 p-2 rounded-lg bg-red-50 border border-red-200"
-                        >
-                          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                          className="flex items-center gap-3 p-2 rounded-lg event-error"
+                >
+                  <div className="w-2 h-2 bg-red-500 dark:bg-red-400 rounded-full animate-pulse"></div>
                           <div className="flex-1">
                             <p className="text-sm font-medium">NFT Withdrawn</p>
                             <p className="text-xs text-muted-foreground">
@@ -804,9 +961,9 @@ export default function Dashboard() {
                     {userEvents.rewardEvents.slice(0, 3).map((event, index) => (
                       <div
                         key={`reward-${index}`}
-                        className="flex items-center gap-3 p-2 rounded-lg bg-blue-50 border border-blue-200"
-                      >
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                        className="flex items-center gap-3 p-2 rounded-lg event-info"
+                >
+                  <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-pulse"></div>
                         <div className="flex-1">
                           <p className="text-sm font-medium">Reward Claimed</p>
                           <p className="text-xs text-muted-foreground">
@@ -856,8 +1013,8 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     {userInfo?.lastRewardClaim &&
                     userInfo.lastRewardClaim > 0 ? (
-                      <div className="flex items-center gap-3 p-2 rounded-lg bg-green-50 border border-green-200">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <div className="flex items-center gap-3 p-2 rounded-lg bg-card border event-success">
+                <div className="w-2 h-2 status-active rounded-full"></div>
                         <div className="flex-1">
                           <p className="text-sm font-medium">
                             Last Reward Claim
@@ -872,8 +1029,8 @@ export default function Dashboard() {
                     ) : null}
 
                     {userInfo?.tokenIds && userInfo.tokenIds.length > 0 ? (
-                      <div className="flex items-center gap-3 p-2 rounded-lg bg-purple-50 border border-purple-200">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      <div className="flex items-center gap-3 p-2 rounded-lg bg-card border border-purple-200 dark:border-purple-800/30">
+                <div className="w-2 h-2 bg-purple-500 dark:bg-purple-400 rounded-full"></div>
                         <div className="flex-1">
                           <p className="text-sm font-medium">
                             {userInfo.tokenIds.length} NFT
@@ -888,8 +1045,8 @@ export default function Dashboard() {
                     ) : null}
 
                     {userInfo?.isActive ? (
-                      <div className="flex items-center gap-3 p-2 rounded-lg bg-blue-50 border border-blue-200">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <div className="flex items-center gap-3 p-2 rounded-lg bg-card border event-info">
+                <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full"></div>
                         <div className="flex-1">
                           <p className="text-sm font-medium">Mining Active</p>
                           <p className="text-xs text-muted-foreground">
