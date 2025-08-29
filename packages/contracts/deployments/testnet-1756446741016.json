@@ -1,0 +1,24 @@
+{
+  "network": "bitkubTestnet",
+  "chainId": 25925,
+  "timestamp": "2025-08-29T05:52:21.015Z",
+  "deployer": "0x4C06524B1bd7AA002747252257bBE0C472735A6D",
+  "contracts": {
+    "automine": "0x9cf4C3F902dd56A94AeBd09526325F63f8BF7eDd",
+    "mockNFT": "0xFB5A318538aA21F06f0bc7792c34443B7B9D86B5",
+    "mockHashStorage": "0xd76cD75FaA7beD947bcBfE388705c401B213F993",
+    "oldMine": "0x1B48a622d4f190b9060462020320d4cA8C588899",
+    "newMine": "0x0a32B6924785D443D2D7f2B7Cf42b4C8694F1Ebf"
+  },
+  "testData": {
+    "nftRange": "1-10",
+    "oldMineReward": "10 KUB",
+    "newMineReward": "15 KUB",
+    "botRole": "0x4C06524B1bd7AA002747252257bBE0C472735A6D"
+  },
+  "configuration": {
+    "feePercentage": "5% (500 basis points)",
+    "maxFeePercentage": "20% (2000 basis points)",
+    "feeCollector": "0x4C06524B1bd7AA002747252257bBE0C472735A6D"
+  }
+}

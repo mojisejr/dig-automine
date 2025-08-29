@@ -11,7 +11,11 @@ export class Web3Service {
 
   constructor(config: BotConfig) {
     this.config = config;
-    this.account = privateKeyToAccount(config.botPrivateKey as `0x${string}`);
+    // Ensure private key has 0x prefix
+    const privateKey = config.botPrivateKey.startsWith('0x') 
+      ? config.botPrivateKey 
+      : `0x${config.botPrivateKey}`;
+    this.account = privateKeyToAccount(privateKey as `0x${string}`);
     this.setupClients();
   }
 

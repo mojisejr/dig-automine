@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-08-29T06:09:46.578Z",
+  "botStatus": "online",
+  "contractStats": {
+    "totalTokens": 0,
+    "activeUsers": 0,
+    "currentMine": "0x1B48a622d4f190b9060462020320d4cA8C588899",
+    "targetMine": "0x0a32B6924785D443D2D7f2B7Cf42b4C8694F1Ebf"
+  },
+  "mineStatuses": {
+    "current": {
+      "name": "Old Mine",
+      "isActive": true,
+      "address": "0x1B48a622d4f190b9060462020320d4cA8C588899"
+    },
+    "target": {
+      "name": "New Mine",
+      "isActive": false,
+      "address": "0x0a32B6924785D443D2D7f2B7Cf42b4C8694F1Ebf"
+    }
+  },
+  "recommendation": {
+    "action": "no-action",
+    "reason": "Current mine (Old Mine) is still active, target mine (New Mine) is inactive"
+  },
+  "systemHealth": {
+    "blockHeight": 24699237,
+    "botBalance": "31956857708651500584",
+    "lastOperation": "startup",
+    "errorCount": 0
+  }
+}

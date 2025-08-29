@@ -38,9 +38,21 @@ export class MineMonitorService {
   async checkMineStatus(mineAddress: Address): Promise<MineStatus> {
     try {
       const mineAbi = [
-        'function name() external view returns (string)',
-        'function isActive() external view returns (bool)'
-      ];
+        {
+          name: 'name',
+          type: 'function',
+          inputs: [],
+          outputs: [{ type: 'string', name: '' }],
+          stateMutability: 'view'
+        },
+        {
+          name: 'isActive',
+          type: 'function', 
+          inputs: [],
+          outputs: [{ type: 'bool', name: '' }],
+          stateMutability: 'view'
+        }
+      ] as const;
 
       const [name, isActive] = await Promise.all([
         this.web3Service.getPublicClient().readContract({
