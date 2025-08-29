@@ -1,21 +1,30 @@
 {
-  "name": "bot",
+  "name": "@automine/bot",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "AutoMine automated bot service for mine switching operations",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lambda:build": "npm run build && zip -r lambda-deploy.zip dist/ node_modules/"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["automine", "bot", "nft", "staking", "automation"],
+  "author": "AutoMine Team",
+  "license": "MIT",
   "packageManager": "pnpm@10.15.0",
   "dependencies": {
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
-    "viem": "^2.36.0"
+    "viem": "^2.36.0",
+    "node-cron": "^3.0.3",
+    "dotenv": "^16.4.5",
+    "aws-sdk": "^2.1692.0"
   },
   "devDependencies": {
-    "@types/node": "^20.19.11"
+    "@types/node": "^20.19.11",
+    "@types/node-cron": "^3.0.11",
+    "@types/aws-lambda": "^8.10.145"
   }
 }
