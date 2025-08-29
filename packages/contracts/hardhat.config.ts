@@ -1,40 +1,29 @@
-import type { HardhatUserConfig } from "hardhat/config";
-
-import hardhatToolboxViemPlugin from "@nomicfoundation/hardhat-toolbox-viem";
-import { configVariable } from "hardhat/config";
+import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox";
 
 const config: HardhatUserConfig = {
-  plugins: [hardhatToolboxViemPlugin],
   solidity: {
-    profiles: {
-      default: {
-        version: "0.8.28",
-      },
-      production: {
-        version: "0.8.28",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
-          },
-        },
+    version: "0.8.27",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
       },
     },
   },
   networks: {
-    hardhatMainnet: {
-      type: "edr-simulated",
-      chainType: "l1",
+    hardhat: {
+      chainId: 1337,
     },
-    hardhatOp: {
-      type: "edr-simulated",
-      chainType: "op",
+    bitkubChain: {
+      url: "https://rpc.bitkubchain.io",
+      chainId: 96,
+      accounts: [],
     },
-    sepolia: {
-      type: "http",
-      chainType: "l1",
-      url: configVariable("SEPOLIA_RPC_URL"),
-      accounts: [configVariable("SEPOLIA_PRIVATE_KEY")],
+    bitkubTestnet: {
+      url: "https://rpc-testnet.bitkubchain.io",
+      chainId: 25925,
+      accounts: [],
     },
   },
 };
