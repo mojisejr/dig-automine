@@ -88,6 +88,67 @@ AutoMine is a web-based platform for automated DigDragon NFT staking management.
      - AWS Secrets Manager integration for secure key storage
      - CloudWatch logging integration
 
+#### **Phase 1B.1: Bot-Contract Integration Testing** (`packages/bot/` + `packages/contracts/`)
+  1. **Testnet Deployment Setup**
+     - Deploy AutoMine.sol contract on Bitkub testnet
+     - Deploy mock DigDragonMine contracts (old mine, new mine) for testing
+     - Configure contract addresses in bot environment
+     - Set up testnet wallet with KUB tokens for gas fees
+     
+  2. **Bot Local Testing Infrastructure**
+     - Configure bot for local development with testnet contracts
+     - Implement comprehensive logging system for all bot operations
+     - Set up automated testing scenarios with predefined NFT sets
+     - Create monitoring dashboard for real-time bot status
+     
+  3. **Core Bot Testing Scenarios**
+     - **2.1 Mine Status Monitoring**: 
+       - Implement mine status checker (open/closed, timing)
+       - Monitor new mine opening schedules
+       - Track old mine closing schedules
+       - Alert system for mine status changes
+     - **2.2 Automated NFT Staking**:
+       - Auto-detect available NFTs in user wallet
+       - Automated staking to new mines when they open
+       - Batch processing for multiple NFTs
+       - Error handling for failed transactions
+     - **2.3 Mine Timing Analysis**:
+       - Real-time tracking of mine open/close schedules
+       - Predictive timing for optimal switching
+       - Historical data collection for pattern analysis
+       - Timing optimization algorithms
+     - **2.4 Automated Mine Switching**:
+       - Monitor optimal switching windows
+       - Execute batch unstaking from old mines
+       - Execute batch staking to new mines
+       - Verify successful transfers and update tracking
+       
+  4. **Reporting and Documentation System**
+     - **Report Generation**: Create automated reports in `/docs/reports/`
+       - Daily operation summaries
+       - Transaction success/failure rates
+       - Gas usage optimization reports
+       - Mine switching efficiency metrics
+     - **Real-time Monitoring**:
+       - Bot health status dashboard
+       - Live transaction monitoring
+       - Error tracking and alerting
+       - Performance metrics collection
+     - **Integration Test Results**:
+       - Contract interaction success rates
+       - Bot automation reliability metrics
+       - System performance under load
+       - Edge case handling verification
+       
+  5. **Testing Validation Criteria**
+     - Bot successfully monitors mine status changes (>99% accuracy)
+     - Automated NFT staking works reliably (>95% success rate)
+     - Mine switching completes within optimal time windows
+     - All operations are properly logged and reported
+     - System handles edge cases (network issues, failed transactions)
+     - Gas optimization meets efficiency targets
+     - Ready for Phase 1C frontend integration
+
 #### **Phase 1C: Frontend Development** (`packages/frontend/`)
   1. **Design System Implementation**
      - Implement "silk" theme using oklch color system
@@ -155,17 +216,48 @@ AutoMine is a web-based platform for automated DigDragon NFT staking management.
     - Admin action audit trail
 
 ### **Implementation Timeline**
-- **Week 1-2**: Smart Contract development and testing
-- **Week 3**: Bot development and contract integration
-- **Week 4-5**: Frontend development and UI implementation
-- **Week 6**: Integration testing and bug fixes
-- **Week 7**: Final testing and testnet deployment preparation
+- **Week 1-2**: Phase 1A - Smart Contract development and testing ✅
+- **Week 3**: Phase 1B - Bot development and package setup ✅
+- **Week 3.5**: Phase 1B.1 - Bot-Contract integration testing on testnet
+- **Week 4-5**: Phase 1C - Frontend development and UI implementation
+- **Week 6**: Phase 1D - Integration testing and bug fixes
+- **Week 7**: Final testing and production deployment preparation
 
 ### **Definition of Done**
-- [ ] AutoMine.sol contract deployed and verified on testnet
-- [ ] All contract functions tested with >95% code coverage
-- [ ] Bot successfully performs automated mine switching
+
+#### **Phase 1A: Smart Contract Development**
+- [x] AutoMine.sol contract implemented with all core functions
+- [x] All contract functions tested with >95% code coverage
+- [x] Security features implemented (ReentrancyGuard, AccessControl)
+- [x] Integration with DigDragon contracts verified
+
+#### **Phase 1B: Bot Development**
+- [x] Bot package structure and core services implemented
+- [x] TypeScript configuration and build system setup
+- [x] Environment configuration and logging utilities
+- [x] AWS Lambda deployment preparation completed
+
+#### **Phase 1B.1: Bot-Contract Integration Testing**
+- [ ] AutoMine.sol contract deployed and verified on Bitkub testnet
+- [ ] Mock DigDragonMine contracts deployed for testing
+- [ ] Bot local testing infrastructure setup completed
+- [ ] Mine status monitoring system implemented and tested
+- [ ] Automated NFT staking functionality verified (>95% success rate)
+- [ ] Mine timing analysis and optimization algorithms working
+- [ ] Automated mine switching tested and validated
+- [ ] Reporting system generating daily summaries in `/docs/reports/`
+- [ ] Real-time monitoring dashboard operational
+- [ ] Integration test results documented with performance metrics
+- [ ] All testing validation criteria met
+
+#### **Phase 1C: Frontend Development**
 - [ ] Frontend provides complete user and admin interfaces
+- [ ] Wallet integration with Bitkub Chain working
+- [ ] Real-time data display from deployed contracts
+- [ ] Responsive design implemented with "silk" theme
+
+#### **Phase 1D: Integration & Final Testing**
 - [ ] End-to-end testing passes for all user journeys
 - [ ] Security audit completed with no critical issues
 - [ ] Documentation updated with deployment and usage instructions
+- [ ] System ready for production deployment
