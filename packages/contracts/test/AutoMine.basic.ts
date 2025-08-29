@@ -8,13 +8,13 @@ describe("AutoMine Basic Tests", function () {
     // Deploy mock contracts
     const MockERC721 = await hre.ethers.deployContract("MockERC721", ["DigDragon", "DD"]);
     const MockHashPowerStorage = await hre.ethers.deployContract("MockHashPowerStorage");
-    const MockDigDragonMine = await hre.ethers.deployContract("MockDigDragonMine");
+    const MockDigDragonMine = await hre.ethers.deployContract("MockDigDragonMine", ["TestMine", true]);
 
     // Deploy AutoMine contract
     const autoMine = await hre.ethers.deployContract("AutoMine", [
-      await MockERC721.getAddress(),
-      await MockHashPowerStorage.getAddress(),
-      await MockDigDragonMine.getAddress(),
+      MockERC721.target,
+      MockHashPowerStorage.target,
+      MockDigDragonMine.target,
       feeCollector.address,
     ]);
 
@@ -28,13 +28,13 @@ describe("AutoMine Basic Tests", function () {
     // Deploy mock contracts
     const MockERC721 = await hre.ethers.deployContract("MockERC721", ["DigDragon", "DD"]);
     const MockHashPowerStorage = await hre.ethers.deployContract("MockHashPowerStorage");
-    const MockDigDragonMine = await hre.ethers.deployContract("MockDigDragonMine");
+    const MockDigDragonMine = await hre.ethers.deployContract("MockDigDragonMine", ["TestMine", true]);
 
     // Deploy AutoMine contract
     const autoMine = await hre.ethers.deployContract("AutoMine", [
-      await MockERC721.getAddress(),
-      await MockHashPowerStorage.getAddress(),
-      await MockDigDragonMine.getAddress(),
+      MockERC721.target,
+      MockHashPowerStorage.target,
+      MockDigDragonMine.target,
       feeCollector.address,
     ]);
 

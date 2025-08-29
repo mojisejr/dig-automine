@@ -57,12 +57,13 @@ class Web3Service {
             throw error;
         }
     }
-    async getBalance() {
+    async getBalance(address) {
         try {
+            const targetAddress = address || this.account.address;
             const balance = await this.publicClient.getBalance({
-                address: this.account.address
+                address: targetAddress
             });
-            logger_1.logger.debug(`Bot wallet balance: ${balance} KUB`, 'WALLET_INFO');
+            logger_1.logger.debug(`Wallet balance for ${targetAddress}: ${balance} KUB`, 'WALLET_INFO');
             return balance;
         }
         catch (error) {

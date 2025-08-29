@@ -28,8 +28,11 @@ export interface MockDigDragonMineInterface extends Interface {
     nameOrSignature:
       | "earnReward"
       | "getStakedTokens"
+      | "isActive"
+      | "name"
       | "onERC721Received"
       | "pendingReward"
+      | "setActive"
       | "setReward"
       | "stake"
       | "stakedTokens"
@@ -48,6 +51,8 @@ export interface MockDigDragonMineInterface extends Interface {
     functionFragment: "getStakedTokens",
     values: [AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "isActive", values?: undefined): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "onERC721Received",
     values: [AddressLike, AddressLike, BigNumberish, BytesLike]
@@ -56,6 +61,7 @@ export interface MockDigDragonMineInterface extends Interface {
     functionFragment: "pendingReward",
     values: [AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "setActive", values: [boolean]): string;
   encodeFunctionData(
     functionFragment: "setReward",
     values: [BigNumberish]
@@ -78,6 +84,8 @@ export interface MockDigDragonMineInterface extends Interface {
     functionFragment: "getStakedTokens",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isActive", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "onERC721Received",
     data: BytesLike
@@ -86,6 +94,7 @@ export interface MockDigDragonMineInterface extends Interface {
     functionFragment: "pendingReward",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setActive", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setReward", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "stake", data: BytesLike): Result;
   decodeFunctionResult(
@@ -185,6 +194,10 @@ export interface MockDigDragonMine extends BaseContract {
     "view"
   >;
 
+  isActive: TypedContractMethod<[], [boolean], "view">;
+
+  name: TypedContractMethod<[], [string], "view">;
+
   onERC721Received: TypedContractMethod<
     [arg0: AddressLike, arg1: AddressLike, arg2: BigNumberish, arg3: BytesLike],
     [string],
@@ -192,6 +205,8 @@ export interface MockDigDragonMine extends BaseContract {
   >;
 
   pendingReward: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+
+  setActive: TypedContractMethod<[_isActive: boolean], [void], "nonpayable">;
 
   setReward: TypedContractMethod<[_amount: BigNumberish], [void], "nonpayable">;
 
@@ -220,6 +235,12 @@ export interface MockDigDragonMine extends BaseContract {
     nameOrSignature: "getStakedTokens"
   ): TypedContractMethod<[_user: AddressLike], [bigint[]], "view">;
   getFunction(
+    nameOrSignature: "isActive"
+  ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "name"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "onERC721Received"
   ): TypedContractMethod<
     [arg0: AddressLike, arg1: AddressLike, arg2: BigNumberish, arg3: BytesLike],
@@ -229,6 +250,9 @@ export interface MockDigDragonMine extends BaseContract {
   getFunction(
     nameOrSignature: "pendingReward"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "setActive"
+  ): TypedContractMethod<[_isActive: boolean], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "setReward"
   ): TypedContractMethod<[_amount: BigNumberish], [void], "nonpayable">;

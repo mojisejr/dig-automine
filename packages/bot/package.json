@@ -7,7 +7,8 @@
     "build": "tsc",
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ts-node src/test-runner.ts",
+    "test:integration": "ts-node src/test-runner.ts",
     "lambda:build": "npm run build && zip -r lambda-deploy.zip dist/ node_modules/"
   },
   "keywords": ["automine", "bot", "nft", "staking", "automation"],

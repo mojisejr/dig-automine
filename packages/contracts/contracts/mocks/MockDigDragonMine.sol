@@ -4,8 +4,15 @@ pragma solidity ^0.8.27;
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
 contract MockDigDragonMine is ERC721Holder {
+    string public name;
+    bool public isActive;
     uint256 private pendingRewardAmount;
     mapping(address => uint256[]) public stakedTokens;
+
+    constructor(string memory _name, bool _isActive) {
+        name = _name;
+        isActive = _isActive;
+    }
     
     event Staked(address indexed user, uint256[] tokenIds);
     event Unstaked(address indexed user, uint256[] tokenIds);
@@ -47,6 +54,10 @@ contract MockDigDragonMine is ERC721Holder {
 
     function getStakedTokens(address _user) external view returns (uint256[] memory) {
         return stakedTokens[_user];
+    }
+
+    function setActive(bool _isActive) external {
+        isActive = _isActive;
     }
 
     receive() external payable {}
