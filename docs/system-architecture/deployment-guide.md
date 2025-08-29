@@ -85,6 +85,31 @@ BITKUB_MAINNET_RPC=https://rpc.bitkubchain.io
 MAINNET_PRIVATE_KEY=your_mainnet_private_key
 
 # Contract Addresses
+AUTOMINE_CONTRACT_ADDRESS=0x9cf4C3F902dd56A94AeBd09526325F63f8BF7eDd
+DIGDRAGON_NFT_CONTRACT_ADDRESS=0xFB5A318538aA21F06f0bc7792c34443B7B9D86B5
+HASH_POWER_STORAGE_CONTRACT_ADDRESS=0xd76cD75FaA7beD947bcBfE388705c401B213F993
+
+# Monitoring
+LOG_LEVEL=info
+ENABLE_MONITORING=true
+```
+
+#### `packages/frontend/.env.local`
+
+```env
+# Contract Addresses (Testnet)
+NEXT_PUBLIC_AUTOMINE_CONTRACT_ADDRESS=0x9cf4C3F902dd56A94AeBd09526325F63f8BF7eDd
+NEXT_PUBLIC_DIGDRAGON_NFT_CONTRACT_ADDRESS=0xFB5A318538aA21F06f0bc7792c34443B7B9D86B5
+NEXT_PUBLIC_HASH_POWER_STORAGE_CONTRACT_ADDRESS=0xd76cD75FaA7beD947bcBfE388705c401B213F993
+
+# Network Configuration
+NEXT_PUBLIC_CHAIN_ID=25925
+NEXT_PUBLIC_CHAIN_NAME="Bitkub Chain Testnet"
+NEXT_PUBLIC_RPC_URL="https://rpc-testnet.bitkubchain.io"
+NEXT_PUBLIC_RPC_URL_TESTNET="https://rpc-testnet.bitkubchain.io"
+
+# WalletConnect Configuration
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_walletconnect_project_id
 DIGDRAGON_CONTRACT_TESTNET=0x...
 DIGDRAGON_CONTRACT_MAINNET=0x...
 ```
@@ -300,10 +325,22 @@ DATABASE_URL="your_render_postgres_url" npx prisma generate
 
 ### 4. Frontend Deployment
 
+#### ✅ Integration Status: COMPLETED
+
+**Current Status**: Frontend successfully integrated with real testnet contracts
+- Environment variables configured for flexible deployment
+- Real-time event monitoring implemented
+- Contract integration with AutoMine, DigDragon NFT, and Hash Power Storage
+- Development server running at http://localhost:3000
+
 #### Render Static Site Deployment
 
 ```bash
 cd packages/frontend
+
+# Ensure environment variables are set
+cp .env.local.example .env.local
+# Edit .env.local with your contract addresses
 
 # Build for production
 npm run build
@@ -317,6 +354,13 @@ npm start
 - Build Command: `npm run build`
 - Publish Directory: `.next`
 - Environment Variables: Set all `NEXT_PUBLIC_*` variables
+- Required Environment Variables:
+  - `NEXT_PUBLIC_AUTOMINE_CONTRACT_ADDRESS`
+  - `NEXT_PUBLIC_DIGDRAGON_NFT_CONTRACT_ADDRESS`
+  - `NEXT_PUBLIC_HASH_POWER_STORAGE_CONTRACT_ADDRESS`
+  - `NEXT_PUBLIC_CHAIN_ID`
+  - `NEXT_PUBLIC_RPC_URL`
+  - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`
 
 #### Alternative: Vercel Deployment
 
