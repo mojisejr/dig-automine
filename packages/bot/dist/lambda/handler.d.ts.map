@@ -1,0 +1,1 @@
+{"version":3,"file":"handler.d.ts","sourceRoot":"","sources":["../../src/lambda/handler.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,oBAAoB,EAAE,qBAAqB,EAAE,OAAO,EAAE,MAAM,YAAY,CAAC;AAOlF,eAAO,MAAM,iBAAiB,GAC5B,OAAO,oBAAoB,EAC3B,SAAS,OAAO,KACf,OAAO,CAAC,qBAAqB,CAmF/B,CAAC;AAEF,eAAO,MAAM,aAAa,GACxB,OAAO,oBAAoB,EAC3B,SAAS,OAAO,KACf,OAAO,CAAC,qBAAqB,CA4B/B,CAAC"}

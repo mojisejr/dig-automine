@@ -1,0 +1,1 @@
+export { mineSwitchHandler, statusHandler } from './handler';
