@@ -229,4 +229,127 @@
     transform: translateY(-2px);
     box-shadow: 0 10px 25px -5px oklch(26% 0.065 152.934 / 0.15);
   }
+  
+  /* Semantic Event Colors - Theme Aware */
+  .event-success {
+    background-color: oklch(from var(--success) l c h / 0.1);
+    border-color: oklch(from var(--success) l c h / 0.3);
+    border-width: 1px;
+  }
+  
+  .event-success-text {
+    color: oklch(from var(--success) calc(l - 0.1) c h);
+  }
+  
+  .event-success-icon {
+    color: var(--success);
+  }
+  
+  .event-info {
+    background-color: oklch(76% 0.188 70.08 / 0.1);
+    border-color: oklch(76% 0.188 70.08 / 0.3);
+    border-width: 1px;
+  }
+  
+  .event-info-text {
+    color: oklch(66% 0.188 70.08);
+  }
+  
+  .event-info-icon {
+    color: oklch(76% 0.188 70.08);
+  }
+  
+  .event-warning {
+    background-color: oklch(from var(--warning) l c h / 0.1);
+    border-color: oklch(from var(--warning) l c h / 0.3);
+    border-width: 1px;
+  }
+  
+  .event-warning-text {
+    color: oklch(from var(--warning) calc(l - 0.1) c h);
+  }
+  
+  .event-warning-icon {
+    color: var(--warning);
+  }
+  
+  .event-error {
+    background-color: oklch(from var(--destructive) l c h / 0.1);
+    border-color: oklch(from var(--destructive) l c h / 0.3);
+    border-width: 1px;
+  }
+  
+  .event-error-text {
+    color: oklch(from var(--destructive) calc(l - 0.1) c h);
+  }
+  
+  .event-error-icon {
+    color: var(--destructive);
+  }
+  
+  /* Status Indicators */
+  .status-active {
+    background-color: var(--success);
+  }
+  
+  .status-inactive {
+    background-color: var(--muted-foreground);
+  }
+  
+  .status-pending {
+    background-color: var(--warning);
+  }
+  
+  /* Loading Spinners */
+  .spinner-primary {
+    border-color: var(--primary);
+    border-top-color: transparent;
+  }
+  
+  .spinner-warning {
+    border-color: var(--warning);
+    border-top-color: transparent;
+  }
+  
+  .spinner-info {
+    border-color: oklch(76% 0.188 70.08);
+    border-top-color: transparent;
+  }
+  
+  /* Event Buttons */
+  .event-error-button {
+    background-color: var(--destructive);
+    color: var(--destructive-foreground);
+  }
+  
+  .event-error-button:hover {
+    background-color: oklch(from var(--destructive) calc(l - 0.05) c h);
+  }
+  
+  .event-success-button {
+    background-color: var(--success);
+    color: var(--primary-foreground);
+  }
+  
+  .event-success-button:hover {
+    background-color: oklch(from var(--success) calc(l - 0.05) c h);
+  }
+  
+  .event-warning-button {
+    background-color: var(--warning);
+    color: var(--primary-foreground);
+  }
+  
+  .event-warning-button:hover {
+    background-color: oklch(from var(--warning) calc(l - 0.05) c h);
+  }
+  
+  .event-info-button {
+    background-color: oklch(76% 0.188 70.08);
+    color: var(--primary-foreground);
+  }
+  
+  .event-info-button:hover {
+    background-color: oklch(66% 0.188 70.08);
+  }
 }

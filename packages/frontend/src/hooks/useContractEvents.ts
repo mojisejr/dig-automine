@@ -2,6 +2,7 @@ import { useWatchContractEvent } from 'wagmi';
 import { useState, useEffect, useCallback } from 'react';
 import { Address, Log } from 'viem';
 import { CONTRACT_ADDRESSES, AUTOMINE_ABI } from '@/lib/contracts';
+import { useMounted } from '@/hooks/useMounted';
 
 // Event types
 export interface DepositEvent {
@@ -32,6 +33,7 @@ export interface MiningStatusEvent {
 export function useDepositEvents(userAddress?: Address) {
   const [events, setEvents] = useState<DepositEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const mounted = useMounted();
 
   useWatchContractEvent({
     address: CONTRACT_ADDRESSES.AUTOMINE,
@@ -39,6 +41,8 @@ export function useDepositEvents(userAddress?: Address) {
     eventName: 'NFTDeposited',
     args: userAddress ? { user: userAddress } : undefined,
     onLogs(logs) {
+      if (!mounted) return;
+      
       const newEvents = logs.map((log: any) => ({
         user: log.args.user,
         tokenIds: log.args.tokenIds,
@@ -61,6 +65,7 @@ export function useDepositEvents(userAddress?: Address) {
 export function useWithdrawEvents(userAddress?: Address) {
   const [events, setEvents] = useState<WithdrawEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const mounted = useMounted();
 
   useWatchContractEvent({
     address: CONTRACT_ADDRESSES.AUTOMINE,
@@ -68,6 +73,8 @@ export function useWithdrawEvents(userAddress?: Address) {
     eventName: 'NFTWithdrawn',
     args: userAddress ? { user: userAddress } : undefined,
     onLogs(logs) {
+      if (!mounted) return;
+      
       const newEvents = logs.map((log: any) => ({
         user: log.args.user,
         tokenIds: log.args.tokenIds,
@@ -90,6 +97,7 @@ export function useWithdrawEvents(userAddress?: Address) {
 export function useRewardClaimEvents(userAddress?: Address) {
   const [events, setEvents] = useState<RewardClaimEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const mounted = useMounted();
 
   useWatchContractEvent({
     address: CONTRACT_ADDRESSES.AUTOMINE,
@@ -97,6 +105,8 @@ export function useRewardClaimEvents(userAddress?: Address) {
     eventName: 'RewardClaimed',
     args: userAddress ? { user: userAddress } : undefined,
     onLogs(logs) {
+      if (!mounted) return;
+      
       const newEvents = logs.map((log: any) => ({
         user: log.args.user,
         amount: log.args.amount,
@@ -119,6 +129,7 @@ export function useRewardClaimEvents(userAddress?: Address) {
 export function useMiningStatusEvents(userAddress?: Address) {
   const [events, setEvents] = useState<MiningStatusEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const mounted = useMounted();
 
   useWatchContractEvent({
     address: CONTRACT_ADDRESSES.AUTOMINE,
@@ -126,6 +137,8 @@ export function useMiningStatusEvents(userAddress?: Address) {
     eventName: 'MineSwitch',
     args: undefined, // MineSwitch doesn't filter by user
     onLogs(logs) {
+      if (!mounted) return;
+      
       const newEvents = logs.map((log: any) => ({
         user: log.args.user,
         isActive: log.args.isActive,
@@ -171,8 +184,15 @@ export function useUserEvents(userAddress?: Address) {
 
 // Hook for real-time data refresh
 export function useRealTimeUpdates(userAddress?: Address) {
-  const [lastUpdate, setLastUpdate] = useState<number>(Date.now());
+  const [lastUpdate, setLastUpdate] = useState<number>(0);
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+  const mounted = useMounted();
+  
+  useEffect(() => {
+    if (mounted) {
+      setLastUpdate(Date.now());
+    }
+  }, [mounted]);
 
   // Watch for any contract events that should trigger a data refresh
   useWatchContractEvent({
@@ -180,6 +200,7 @@ export function useRealTimeUpdates(userAddress?: Address) {
     abi: AUTOMINE_ABI,
     eventName: 'NFTDeposited',
     onLogs() {
+      if (!mounted) return;
       setLastUpdate(Date.now());
       setRefreshTrigger(prev => prev + 1);
     },
@@ -190,6 +211,7 @@ export function useRealTimeUpdates(userAddress?: Address) {
     abi: AUTOMINE_ABI,
     eventName: 'NFTWithdrawn',
     onLogs() {
+      if (!mounted) return;
       setLastUpdate(Date.now());
       setRefreshTrigger(prev => prev + 1);
     },
@@ -200,6 +222,7 @@ export function useRealTimeUpdates(userAddress?: Address) {
     abi: AUTOMINE_ABI,
     eventName: 'RewardClaimed',
     onLogs() {
+      if (!mounted) return;
       setLastUpdate(Date.now());
       setRefreshTrigger(prev => prev + 1);
     },
@@ -207,9 +230,10 @@ export function useRealTimeUpdates(userAddress?: Address) {
 
   // Manual refresh function
   const refresh = useCallback(() => {
+    if (!mounted) return;
     setLastUpdate(Date.now());
     setRefreshTrigger(prev => prev + 1);
-  }, []);
+  }, [mounted]);
 
   return {
     lastUpdate,
@@ -220,12 +244,19 @@ export function useRealTimeUpdates(userAddress?: Address) {
 
 // Hook for contract statistics with real-time updates
 export function useRealTimeStats() {
+  const mounted = useMounted();
   const [stats, setStats] = useState({
     totalStaked: BigInt(0),
     totalUsers: BigInt(0),
     totalRewardsClaimed: BigInt(0),
-    lastUpdate: Date.now()
+    lastUpdate: 0
   });
+  
+  useEffect(() => {
+    if (mounted) {
+      setStats(prev => ({ ...prev, lastUpdate: Date.now() }));
+    }
+  }, [mounted]);
 
   // Watch for events that affect global stats
   useWatchContractEvent({
@@ -233,6 +264,7 @@ export function useRealTimeStats() {
     abi: AUTOMINE_ABI,
     eventName: 'NFTDeposited',
     onLogs(logs) {
+      if (!mounted) return;
       // Update stats when new deposits happen
       setStats(prev => ({
         ...prev,
@@ -246,6 +278,7 @@ export function useRealTimeStats() {
     abi: AUTOMINE_ABI,
     eventName: 'NFTWithdrawn',
     onLogs(logs) {
+      if (!mounted) return;
       // Update stats when withdrawals happen
       setStats(prev => ({
         ...prev,
@@ -259,6 +292,7 @@ export function useRealTimeStats() {
     abi: AUTOMINE_ABI,
     eventName: 'RewardClaimed',
     onLogs(logs) {
+      if (!mounted) return;
       // Update stats when rewards are claimed
       setStats(prev => ({
         ...prev,

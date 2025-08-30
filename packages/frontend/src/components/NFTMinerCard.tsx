@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Zap, Clock, TrendingUp } from 'lucide-react';
 import { formatEther } from 'viem';
+import { useMounted } from '@/hooks/useMounted';
 
 interface NFTMinerCardProps {
   tokenId: bigint;
@@ -27,21 +28,24 @@ export function NFTMinerCard({
   onClaimRewards,
   isLoading = false
 }: NFTMinerCardProps) {
+  const mounted = useMounted();
+  
+  // Color palette for NFT cards
   const colors = [
     'from-purple-500 to-pink-500',
     'from-blue-500 to-cyan-500', 
     'from-green-500 to-emerald-500',
     'from-orange-500 to-red-500',
     'from-indigo-500 to-purple-500',
-    'from-red-500 to-pink-500',
-    'from-cyan-500 to-blue-500',
-    'from-emerald-500 to-green-500'
+    'from-teal-500 to-blue-500'
   ];
   
   const colorIndex = Number(tokenId) % colors.length;
   const colorClass = colors[colorIndex];
   
   const formatTimeAgo = (timestamp: bigint) => {
+    if (!mounted) return 'Loading...';
+    
     const now = Math.floor(Date.now() / 1000);
     const diff = now - Number(timestamp);
     
@@ -86,7 +90,7 @@ export function NFTMinerCard({
         
         {/* Estimated Rewards */}
         {estimatedRewards !== undefined && (
-          <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+          <div className="flex items-center justify-between p-3 event-success rounded-lg">
             <div className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-green-500" />
               <span className="font-medium text-green-700">Estimated Rewards</span>
@@ -99,7 +103,7 @@ export function NFTMinerCard({
         
         {/* Last Reward Claim */}
         {lastRewardClaim && lastRewardClaim > 0 && (
-          <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center justify-between p-3 event-info rounded-lg">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-blue-500" />
               <span className="font-medium text-blue-700">Last Claim</span>

@@ -5,15 +5,16 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Home, LayoutDashboard, Wallet, Menu, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAccount, useConnect, useDisconnect, useSwitchChain, useChainId } from "wagmi";
+import { useMounted } from "@/hooks/useMounted";
 import { injected } from "wagmi/connectors";
 import { bitkubTestnet } from "wagmi/chains";
 
 export function Navigation() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const { address, isConnected, chain } = useAccount();
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
@@ -31,9 +32,7 @@ export function Navigation() {
     }
   };
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+
 
   const handleConnect = () => {
     connect({ connector: injected() });
@@ -108,7 +107,7 @@ export function Navigation() {
                     <Button
                       onClick={handleSwitchNetwork}
                       size="sm"
-                      className="bg-orange-500 hover:bg-orange-600 text-white border-0"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground border-0"
                     >
                       Switch to Testnet
                     </Button>
@@ -198,7 +197,7 @@ export function Navigation() {
                         </Badge>
                         <Button
                           onClick={handleSwitchNetwork}
-                          className="w-full bg-orange-500 hover:bg-orange-600 text-white border-0"
+                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0"
                         >
                           Switch to Bitkub Testnet
                         </Button>

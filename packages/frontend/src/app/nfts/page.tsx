@@ -118,7 +118,7 @@ export default function NFTsPage() {
 
       {/* Wrong Network Warning */}
       {isWrongNetwork && (
-        <Card className="border-red-200 bg-red-50 mb-6">
+        <Card className="event-error mb-6">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -135,7 +135,7 @@ export default function NFTsPage() {
               </div>
               <Button 
                 onClick={handleSwitchNetwork}
-                className="bg-red-600 hover:bg-red-700 text-white"
+                className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
                 size="sm"
               >
                 Switch to Testnet
@@ -187,7 +187,7 @@ export default function NFTsPage() {
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
               <div className={`h-4 w-4 rounded-full ${
-                userInfo?.isActive ? 'bg-green-500' : 'bg-gray-400'
+                userInfo?.isActive ? 'bg-success' : 'bg-muted-foreground'
               }`} />
               <span className="text-sm font-medium">Status</span>
             </div>
@@ -234,7 +234,7 @@ export default function NFTsPage() {
 
       {/* Approval Required */}
       {nftBalance && nftBalance > 0 && !isApprovedForAll && (
-        <Card className="mb-6 border-yellow-200 bg-yellow-50">
+        <Card className="event-warning mb-6">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
