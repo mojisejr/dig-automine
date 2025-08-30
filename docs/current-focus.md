@@ -1,59 +1,27 @@
-# Current Focus: Dashboard UI Contrast Fix
+# Current Focus
 
-**Updated:** 2025-01-29  
-**Priority:** HIGH
+## Phase 1: Hydration and UI Polish
 
-## Current Issue: Poor Contrast in Dashboard Cards
+**Objective**: Resolve all hydration errors and unify the color scheme across the application.
 
-**Problem**: Card content areas in the dashboard have poor contrast due to hardcoded light theme colors that don't adapt to the dark theme system.
+### Part 1: Hydration Mismatch Error Resolution
 
-**Affected Areas**:
-- Transaction history cards (Mining History tab)
-- Event display cards (Reward, Deposit, Withdraw events)
-- Any card content using hardcoded Tailwind color classes
+**Analysis**: Hydration errors are present in `app/dashboard/page.tsx`, `app/nfts/page.tsx`, and `components/navigation.tsx` due to rendering client-side state without proper guards. The `useContractEvents.ts` hook's use of `Date.now()` also contributes to this issue.
 
-**Root Cause**: Hardcoded `bg-green-50`, `bg-blue-50`, `bg-orange-50` with `border-green-200`, etc. that bypass the sophisticated OKLCH color system.
+**Resolution Plan**:
 
-## 🎯 Fix Plan
+1.  **Create `useMounted` Hook**: Develop a centralized `useMounted` hook to manage component mount state.
+2.  **Global `mounted` Guard**: Apply the `useMounted` hook to all components that use client-side state to prevent server-client mismatch.
+3.  **Dynamic Component Refactoring**: Extract client-only UI into dynamically loaded components using `next/dynamic` with `ssr: false`.
+4.  **Stabilize Timestamps**: Modify `useContractEvents.ts` to use blockchain event timestamps where possible, or protect timestamp-dependent UI with the `mounted` guard.
 
-### 1. Identify Problem Areas
-- **Location**: `/packages/frontend/src/app/dashboard/page.tsx` (lines 510-580)
-- **Specific Issues**:
-  - `bg-green-50 border-green-200 text-green-600` for reward events
-  - `bg-blue-50 border-blue-200 text-blue-600` for deposit events  
-  - `bg-orange-50 border-orange-200 text-orange-600` for withdraw events
-  - These hardcoded colors don't adapt to dark theme
+### Part 2: UI Color Styling Unification
 
-### 2. Solution Strategy
-- **Replace hardcoded colors** with theme-aware semantic classes
-- **Use existing OKLCH color system** from the silk theme
-- **Maintain visual hierarchy** while ensuring proper contrast
-- **Test in both light and dark modes**
+**Analysis**: Inconsistent color styling exists due to hardcoded colors in `Card` components and for various event states.
 
-### 3. Implementation Steps
-1. **Audit all hardcoded color classes** in dashboard components
-2. **Create semantic color mappings** for event types (success, info, warning)
-3. **Replace hardcoded classes** with theme-aware alternatives
-4. **Test contrast ratios** in both themes
-5. **Verify accessibility compliance**
+**Resolution Plan**:
 
-### 4. Expected Outcome
-- ✅ Proper contrast in both light and dark themes
-- ✅ Consistent with existing OKLCH color system
-- ✅ Maintains visual hierarchy and readability
-- ✅ Accessible color combinations (WCAG 2.1 compliant)
-
----
-
-## 🔧 Technical Notes
-
-**Current Color System**: The project uses a sophisticated OKLCH-based "silk" theme with proper dark/light mode support.
-
-**Files to Modify**:
-- `/packages/frontend/src/app/dashboard/page.tsx` (primary focus)
-- Any other components using hardcoded Tailwind color classes
-
-**Testing Required**:
-- Visual testing in both light and dark themes
-- Contrast ratio validation
-- Cross-browser compatibility check
+1.  **Audit Hardcoded Colors**: Conduct a project-wide search for all hardcoded color classes.
+2.  **Define Semantic Color Variants**: Extend the Tailwind CSS theme in `tailwind.config.js` with semantic color variables for `success`, `warning`, `error`, and `info` states, compatible with both light and dark modes.
+3.  **Create `Card` Component Variants**: Refactor the `Card` component to accept a `variant` prop (e.g., `variant="success"`) to apply semantic colors consistently.
+4.  **Replace Hardcoded Colors**: Replace all instances of hardcoded colors with the new theme variants.

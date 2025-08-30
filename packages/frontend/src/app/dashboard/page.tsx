@@ -31,11 +31,39 @@ import { bitkubTestnet } from "wagmi/chains";
 import { useDashboardData, useAutoMineTransactions } from "@/hooks/useAutoMine";
 import { useUserEvents, useRealTimeUpdates } from "@/hooks/useContractEvents";
 import { NETWORK_CONFIG } from "@/lib/contracts";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useMounted } from "@/hooks/useMounted";
+import dynamic from 'next/dynamic';
+
+// Dynamic imports for client-side components
+const WalletConnection = dynamic(() => import('@/components/dynamic/WalletConnection'), {
+  ssr: false,
+  loading: () => <div className="h-10 bg-muted animate-pulse rounded-md" />
+});
+
+const DashboardAnalytics = dynamic(() => import('@/components/dynamic/DashboardAnalytics'), {
+  ssr: false,
+  loading: () => (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <Card key={i}>
+            <CardHeader className="pb-2">
+              <div className="h-4 w-24 bg-muted animate-pulse rounded" />
+            </CardHeader>
+            <CardContent>
+              <div className="h-8 w-16 bg-muted animate-pulse rounded" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  )
+});
 // import { toast } from "sonner";
 
 export default function Dashboard() {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const { address, isConnected, chain } = useAccount();
   const { switchChain } = useSwitchChain();
   const chainId = useChainId();
@@ -54,9 +82,7 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+
 
   const {
     userInfo,
@@ -138,20 +164,20 @@ export default function Dashboard() {
                   </>
                 )}
                 {isConfirming && (
-                    <>
-                      <div className="w-4 h-4 border-2 spinner-warning rounded-full animate-spin" />
-                      <span className="event-warning-text">
-                        Confirming transaction...
+                  <>
+                    <div className="w-4 h-4 border-2 spinner-warning rounded-full animate-spin" />
+                    <span className="event-warning-text">
+                      Confirming transaction...
                     </span>
                   </>
                 )}
                 {isConfirmed && (
-                    <>
-                      <div className="w-4 h-4 status-active rounded-full flex items-center justify-center">
-                        <Check className="h-3 w-3 text-white" />
-                      </div>
-                      <span className="event-success-text">
-                        Transaction confirmed!
+                  <>
+                    <div className="w-4 h-4 status-active rounded-full flex items-center justify-center">
+                      <Check className="h-3 w-3 text-white" />
+                    </div>
+                    <span className="event-success-text">
+                      Transaction confirmed!
                     </span>
                   </>
                 )}
@@ -335,20 +361,28 @@ export default function Dashboard() {
                       userInfo.tokenIds.map((tokenId, index) => {
                         const colors = [
                           "from-purple-500 to-pink-500",
-                          "from-blue-500 to-cyan-500", 
+                          "from-blue-500 to-cyan-500",
                           "from-green-500 to-emerald-500",
                           "from-orange-500 to-red-500",
                           "from-indigo-500 to-purple-500",
                         ];
                         const colorClass = colors[index % colors.length];
-                        
+
                         return (
                           <div
                             key={tokenId.toString()}
                             className="flex items-center justify-between p-4 rounded-lg bg-card/50 border border-border/30"
                           >
                             <div className="flex items-center space-x-4">
-                              <div className={`w-3 h-3 ${userInfo.isActive ? 'status-active' : 'status-inactive'} rounded-full ${userInfo.isActive ? 'animate-pulse' : ''}`}></div>
+                              <div
+                                className={`w-3 h-3 ${
+                                  userInfo.isActive
+                                    ? "status-active"
+                                    : "status-inactive"
+                                } rounded-full ${
+                                  userInfo.isActive ? "animate-pulse" : ""
+                                }`}
+                              ></div>
                               <div className="flex items-center gap-3">
                                 <div
                                   className={`w-10 h-10 bg-gradient-to-br ${colorClass} rounded-lg flex items-center justify-center text-white font-bold text-xs`}
@@ -356,7 +390,9 @@ export default function Dashboard() {
                                   #{tokenId.toString().padStart(3, "0")}
                                 </div>
                                 <div>
-                                  <p className="font-medium">NFT Miner #{tokenId.toString()}</p>
+                                  <p className="font-medium">
+                                    NFT Miner #{tokenId.toString()}
+                                  </p>
                                   <p className="text-sm text-muted-foreground">
                                     DigDragon Collection
                                   </p>
@@ -368,7 +404,9 @@ export default function Dashboard() {
                                 {userInfo.isActive ? "Active Mining" : "Idle"}
                               </p>
                               <p className="text-sm text-muted-foreground">
-                                {userInfo.isActive ? "Earning rewards" : "Not earning"}
+                                {userInfo.isActive
+                                  ? "Earning rewards"
+                                  : "Not earning"}
                               </p>
                             </div>
                           </div>
@@ -389,119 +427,11 @@ export default function Dashboard() {
               </TabsContent>
 
               <TabsContent value="analytics" className="space-y-6">
-                <Card className="silk-shadow border-border/50">
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <BarChart3 className="h-5 w-5 mr-2" />
-                      Performance Analytics
-                    </CardTitle>
-                    <CardDescription>
-                      Detailed insights into your mining performance
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {dashboardLoading ? (
-                      <div className="h-64 flex items-center justify-center text-muted-foreground">
-                        <div className="text-center">
-                          <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                          <p>Loading analytics...</p>
-                        </div>
-                      </div>
-                    ) : !isConnected ? (
-                      <div className="h-64 flex items-center justify-center text-muted-foreground">
-                        <div className="text-center">
-                          <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                          <p>Connect wallet to view analytics</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-6">
-                        {/* Analytics Overview */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="p-4 border rounded-lg bg-card/30">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">Total Hash Power</p>
-                                <p className="text-2xl font-bold">{userInfo?.totalHashPower?.toString() || "0"}</p>
-                              </div>
-                              <Zap className="h-8 w-8 event-info-icon" />
-                            </div>
-                          </div>
-                          
-                          <div className="p-4 border rounded-lg bg-card/30">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">Staked NFTs</p>
-                                <p className="text-2xl font-bold">{userInfo?.tokenIds?.length || 0}</p>
-                              </div>
-                              <Target className="h-8 w-8 event-success-icon" />
-                            </div>
-                          </div>
-                          
-                          <div className="p-4 border rounded-lg bg-card/30">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">Mining Status</p>
-                                <p className="text-2xl font-bold">{userInfo?.isActive ? "Active" : "Idle"}</p>
-                              </div>
-                              <Activity className={`h-8 w-8 ${userInfo?.isActive ? 'event-success-icon' : 'text-gray-500 dark:text-gray-400'}`} />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Performance Summary */}
-                        <div className="border rounded-lg p-4 bg-card/30">
-                          <h3 className="font-semibold mb-4 flex items-center">
-                            <TrendingUp className="h-5 w-5 mr-2" />
-                            Performance Summary
-                          </h3>
-                          <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground">Total Earnings</span>
-                              <span className="font-medium">{formatEther(totalEarnings)} KUB</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground">Last Reward Claim</span>
-                              <span className="font-medium">
-                                {userInfo?.lastRewardClaim && userInfo.lastRewardClaim > 0 
-                                  ? new Date(Number(userInfo.lastRewardClaim) * 1000).toLocaleDateString()
-                                  : "Never"
-                                }
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground">Mining Efficiency</span>
-                              <span className="font-medium">
-                                {userInfo?.isActive && userInfo?.tokenIds?.length > 0 
-                                  ? "Optimized" 
-                                  : "Not Mining"
-                                }
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Contract Analytics */}
-                        <div className="border rounded-lg p-4 bg-card/30">
-                          <h3 className="font-semibold mb-4 flex items-center">
-                            <Users className="h-5 w-5 mr-2" />
-                            Network Statistics
-                          </h3>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <p className="text-sm text-muted-foreground">Total Network Tokens</p>
-                              <p className="text-xl font-bold">{contractStats?.totalTokens?.toString() || "0"}</p>
-                            </div>
-                            <div className="space-y-2">
-                              <p className="text-sm text-muted-foreground">Active Users</p>
-                              <p className="text-xl font-bold">{contractStats?.activeUsers?.toString() || "0"}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                <DashboardAnalytics 
+                  userInfo={userInfo || undefined}
+                  contractStats={contractStats || undefined}
+                  isLoading={dashboardLoading}
+                />
               </TabsContent>
 
               <TabsContent value="history" className="space-y-6">
@@ -526,94 +456,112 @@ export default function Dashboard() {
                     ) : (
                       <div className="space-y-4">
                         {/* Reward Events */}
-                        {userEvents.rewardEvents.slice(0, 10).map((event, index) => (
-                          <div
-                            key={`reward-${index}`}
-                            className="flex items-center justify-between p-3 rounded-lg event-success"
-                          >
-                            <div className="flex items-center gap-3">
-                              <Coins className="h-5 w-5 event-success-icon" />
-                              <div>
-                                <p className="font-medium">Reward Claimed</p>
-                                <p className="text-sm text-muted-foreground">
-                                  Just now
+                        {userEvents.rewardEvents
+                          .slice(0, 10)
+                          .map((event, index) => (
+                            <div
+                              key={`reward-${index}`}
+                              className="flex items-center justify-between p-3 rounded-lg event-success"
+                            >
+                              <div className="flex items-center gap-3">
+                                <Coins className="h-5 w-5 event-success-icon" />
+                                <div>
+                                  <p className="font-medium">Reward Claimed</p>
+                                  <p className="text-sm text-muted-foreground">
+                                    Just now
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium event-success-text">
+                                  +{formatEther(event.amount)} KUB
                                 </p>
                               </div>
                             </div>
-                            <div className="text-right">
-                              <p className="font-medium event-success-text">
-                                +{formatEther(event.amount)} KUB
-                              </p>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
 
                         {/* Deposit Events */}
-                        {userEvents.depositEvents.slice(0, 10).map((event, index) => (
-                          <div
-                            key={`deposit-${index}`}
-                            className="flex items-center justify-between p-3 rounded-lg event-info"
-                          >
-                            <div className="flex items-center gap-3">
-                              <Zap className="h-5 w-5 event-info-icon" />
-                              <div>
-                                <p className="font-medium">
-                                  {event.tokenIds.length} NFT{event.tokenIds.length > 1 ? "s" : ""} Staked
-                                </p>
-                                <p className="text-sm text-muted-foreground">
-                                  Just now
+                        {userEvents.depositEvents
+                          .slice(0, 10)
+                          .map((event, index) => (
+                            <div
+                              key={`deposit-${index}`}
+                              className="flex items-center justify-between p-3 rounded-lg event-info"
+                            >
+                              <div className="flex items-center gap-3">
+                                <Zap className="h-5 w-5 event-info-icon" />
+                                <div>
+                                  <p className="font-medium">
+                                    {event.tokenIds.length} NFT
+                                    {event.tokenIds.length > 1 ? "s" : ""}{" "}
+                                    Staked
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">
+                                    Just now
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium event-info-text">
+                                  {event.tokenIds
+                                    .slice(0, 3)
+                                    .map((id) => `#${id.toString()}`)
+                                    .join(", ")}
+                                  {event.tokenIds.length > 3 &&
+                                    ` +${event.tokenIds.length - 3} more`}
                                 </p>
                               </div>
                             </div>
-                            <div className="text-right">
-                              <p className="font-medium event-info-text">
-                                {event.tokenIds.slice(0, 3).map(id => `#${id.toString()}`).join(", ")}
-                                {event.tokenIds.length > 3 && ` +${event.tokenIds.length - 3} more`}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
 
                         {/* Withdraw Events */}
-                        {userEvents.withdrawEvents.slice(0, 10).map((event, index) => (
-                          <div
-                            key={`withdraw-${index}`}
-                            className="flex items-center justify-between p-3 rounded-lg event-warning"
-                          >
-                            <div className="flex items-center gap-3">
-                              <TrendingUp className="h-5 w-5 event-warning-icon" />
-                              <div>
-                                <p className="font-medium">
-                                  {event.tokenIds.length} NFT{event.tokenIds.length > 1 ? "s" : ""} Unstaked
-                                </p>
-                                <p className="text-sm text-muted-foreground">
-                                  Just now
+                        {userEvents.withdrawEvents
+                          .slice(0, 10)
+                          .map((event, index) => (
+                            <div
+                              key={`withdraw-${index}`}
+                              className="flex items-center justify-between p-3 rounded-lg event-warning"
+                            >
+                              <div className="flex items-center gap-3">
+                                <TrendingUp className="h-5 w-5 event-warning-icon" />
+                                <div>
+                                  <p className="font-medium">
+                                    {event.tokenIds.length} NFT
+                                    {event.tokenIds.length > 1 ? "s" : ""}{" "}
+                                    Unstaked
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">
+                                    Just now
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium event-warning-text">
+                                  {event.tokenIds
+                                    .slice(0, 3)
+                                    .map((id) => `#${id.toString()}`)
+                                    .join(", ")}
+                                  {event.tokenIds.length > 3 &&
+                                    ` +${event.tokenIds.length - 3} more`}
                                 </p>
                               </div>
                             </div>
-                            <div className="text-right">
-                              <p className="font-medium event-warning-text">
-                                {event.tokenIds.slice(0, 3).map(id => `#${id.toString()}`).join(", ")}
-                                {event.tokenIds.length > 3 && ` +${event.tokenIds.length - 3} more`}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
 
                         {/* Empty State */}
-                        {userEvents.depositEvents.length === 0 && 
-                         userEvents.withdrawEvents.length === 0 && 
-                         userEvents.rewardEvents.length === 0 && (
-                          <div className="text-center py-8">
-                            <Clock className="h-12 w-12 mx-auto mb-4 opacity-50 text-muted-foreground" />
-                            <p className="text-muted-foreground mb-2">
-                              No transaction history yet
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              Start mining to see your activity here
-                            </p>
-                          </div>
-                        )}
+                        {userEvents.depositEvents.length === 0 &&
+                          userEvents.withdrawEvents.length === 0 &&
+                          userEvents.rewardEvents.length === 0 && (
+                            <div className="text-center py-8">
+                              <Clock className="h-12 w-12 mx-auto mb-4 opacity-50 text-muted-foreground" />
+                              <p className="text-muted-foreground mb-2">
+                                No transaction history yet
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Start mining to see your activity here
+                              </p>
+                            </div>
+                          )}
                       </div>
                     )}
                   </CardContent>
@@ -770,8 +718,8 @@ export default function Dashboard() {
               <CardContent className="space-y-4">
                 {!isConnected ? (
                   <div className="text-center p-4 rounded-lg bg-card/50 border border-border/30">
-                    <div className="w-12 h-12 bg-red-100 dark:bg-red-950/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Wallet className="h-6 w-6 event-error-icon" />
+                    <div className="w-12 h-12 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Wallet className="h-6 w-6 event-error-icon" />
                     </div>
                     <p className="font-medium mb-2">Wallet Not Connected</p>
                     <p className="text-sm text-muted-foreground mb-4">
@@ -783,8 +731,8 @@ export default function Dashboard() {
                   </div>
                 ) : (
                   <div className="text-center p-4 rounded-lg event-success">
-                <div className="w-12 h-12 bg-green-100 dark:bg-green-950/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Wallet className="h-6 w-6 event-success-icon" />
+                    <div className="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Wallet className="h-6 w-6 event-success-icon" />
                     </div>
                     <p className="font-medium mb-2">Wallet Connected</p>
                     <p className="text-sm text-muted-foreground mb-2">
@@ -922,8 +870,8 @@ export default function Dashboard() {
                         <div
                           key={`deposit-${index}`}
                           className="flex items-center gap-3 p-2 rounded-lg bg-card border event-success"
-                >
-                  <div className="w-2 h-2 status-active rounded-full animate-pulse"></div>
+                        >
+                          <div className="w-2 h-2 status-active rounded-full animate-pulse"></div>
                           <div className="flex-1">
                             <p className="text-sm font-medium">NFT Deposited</p>
                             <p className="text-xs text-muted-foreground">
@@ -943,8 +891,8 @@ export default function Dashboard() {
                         <div
                           key={`withdraw-${index}`}
                           className="flex items-center gap-3 p-2 rounded-lg event-error"
-                >
-                  <div className="w-2 h-2 bg-red-500 dark:bg-red-400 rounded-full animate-pulse"></div>
+                        >
+                          <div className="w-2 h-2 bg-error rounded-full animate-pulse"></div>
                           <div className="flex-1">
                             <p className="text-sm font-medium">NFT Withdrawn</p>
                             <p className="text-xs text-muted-foreground">
@@ -962,8 +910,8 @@ export default function Dashboard() {
                       <div
                         key={`reward-${index}`}
                         className="flex items-center gap-3 p-2 rounded-lg event-info"
-                >
-                  <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-pulse"></div>
+                      >
+                        <div className="w-2 h-2 bg-info rounded-full animate-pulse"></div>
                         <div className="flex-1">
                           <p className="text-sm font-medium">Reward Claimed</p>
                           <p className="text-xs text-muted-foreground">
@@ -1014,7 +962,7 @@ export default function Dashboard() {
                     {userInfo?.lastRewardClaim &&
                     userInfo.lastRewardClaim > 0 ? (
                       <div className="flex items-center gap-3 p-2 rounded-lg bg-card border event-success">
-                <div className="w-2 h-2 status-active rounded-full"></div>
+                        <div className="w-2 h-2 status-active rounded-full"></div>
                         <div className="flex-1">
                           <p className="text-sm font-medium">
                             Last Reward Claim
@@ -1030,7 +978,7 @@ export default function Dashboard() {
 
                     {userInfo?.tokenIds && userInfo.tokenIds.length > 0 ? (
                       <div className="flex items-center gap-3 p-2 rounded-lg bg-card border border-purple-200 dark:border-purple-800/30">
-                <div className="w-2 h-2 bg-purple-500 dark:bg-purple-400 rounded-full"></div>
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
                         <div className="flex-1">
                           <p className="text-sm font-medium">
                             {userInfo.tokenIds.length} NFT
@@ -1046,7 +994,7 @@ export default function Dashboard() {
 
                     {userInfo?.isActive ? (
                       <div className="flex items-center gap-3 p-2 rounded-lg bg-card border event-info">
-                <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full"></div>
+                        <div className="w-2 h-2 bg-info rounded-full"></div>
                         <div className="flex-1">
                           <p className="text-sm font-medium">Mining Active</p>
                           <p className="text-xs text-muted-foreground">
@@ -1055,8 +1003,8 @@ export default function Dashboard() {
                         </div>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 border border-gray-200">
-                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      <div className="flex items-center gap-3 p-2 rounded-lg bg-muted border border-border">
+                  <div className="w-2 h-2 bg-muted-foreground rounded-full"></div>
                         <div className="flex-1">
                           <p className="text-sm font-medium">Mining Inactive</p>
                           <p className="text-xs text-muted-foreground">
